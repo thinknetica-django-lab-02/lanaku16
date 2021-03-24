@@ -1,13 +1,17 @@
-<!doctype html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>О нас</title>
-</head>
-<body>
-    {{ flatpages.content }}
-</body>
-</html>
+{% extends 'main/base.html' %}
+{% load flatpages %}
+
+{% block title %}
+{% get_flatpages '/about/' as flatpages %}
+    {% for page in flatpages %}
+        {{ page.title }}
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+    {% get_flatpages '/about/' as flatpages %}
+    {% for page in flatpages %}
+        {{ page.content|safe }}
+    {% endfor %}
+{% endblock %}
+
