@@ -2,8 +2,8 @@ from django.db import models
 from django.urls import reverse
 
 
-""" Продавец """
 class Seller(models.Model):
+    """ Продавец """
     seller_name = models.CharField(max_length=50, help_text="Введите наименование организации", verbose_name="Наименование организации")
     mode = models.CharField(max_length=50, help_text="Введите форму организации", verbose_name="Форма организации") # ИП, Самозанятый и тд
     INN = models.CharField(max_length=12, help_text="Введите ИНН организации", verbose_name="ИНН организации") # функция проверки ИНН
@@ -17,8 +17,8 @@ class Seller(models.Model):
     def __str__(self):
         return self.seller_name
 
-""" Тэг """
 class Tag(models.Model):
+    """ Тэг """
     tag_name = models.CharField(max_length=20, help_text="Введите наименование тега", verbose_name="Наименование тега")
     date_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     date_update = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
@@ -26,8 +26,8 @@ class Tag(models.Model):
     def __str__(self):
         return self.tag_name
 
-""" Категория """
 class Category(models.Model):
+    """ Категория """
     category_name = models.CharField(max_length=50, help_text="Введите наименование категории", verbose_name="Наименование категории")
     date_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     date_update = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
@@ -35,8 +35,8 @@ class Category(models.Model):
     def __str__(self):
         return self.category_name
 
-""" Товар """
 class Good(models.Model):
+    """ Товар """
     good_name = models.CharField(max_length=30, help_text="Введите наименование товара", verbose_name="Наименование товара")
     description = models.CharField(max_length=255, help_text="Введите описание товара", verbose_name="Описание")
     picture = models.ImageField(upload_to="images/", verbose_name="Картинка")
