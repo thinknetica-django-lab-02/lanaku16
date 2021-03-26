@@ -29,6 +29,7 @@ class Tag(models.Model):
 class Category(models.Model):
     """ Категория """
     category_name = models.CharField(max_length=50, help_text="Введите наименование категории", verbose_name="Наименование категории")
+    slug = models.SlugField(verbose_name="Слаг")
     date_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     date_update = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
 
