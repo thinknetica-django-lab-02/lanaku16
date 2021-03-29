@@ -8,6 +8,10 @@
     {% endfor %}
 {% endblock %}
 
+{% block header %}
+    {% include 'main/header.html' %}
+{% endblock %}
+
 {% block content %}
 {% get_flatpages '/contacts/' as flatpages %}
     {% for page in flatpages %}
