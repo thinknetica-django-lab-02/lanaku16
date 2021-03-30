@@ -62,5 +62,4 @@ class Good(models.Model):
         return self.good_name
 
     def get_absolute_url(self):
-        pass
-        #return reverse('good-detail', args=[str(self.good_name)])
+        return reverse('good-detail', args=[str(self.id)])

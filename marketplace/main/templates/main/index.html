@@ -1,4 +1,5 @@
 {% extends 'main/base.html' %}
+{% load static %}
 
 {% block title %}
     Marketplace
@@ -9,6 +10,7 @@
 {% endblock %}
 
 {% block content %}
+  <img src="{% static 'images/big_megsezon_29_03.jpg' %}" class="img-fluid" alt="Просто картинка для главной страницы">
   <h1>Bootstrap template</h1>
   <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
 {% endblock %}

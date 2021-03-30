@@ -1,0 +1,36 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}
+    Каталог товаров
+{% endblock %}
+
+{% block header %}
+    {% include 'main/header.html' %}
+{% endblock %}
+
+
+{% block content %}
+<h3>{{good.brand}}/{{ good.good_name }}</h3>
+<p class="card-text"><small class="text-muted">Артикул: {{good.good_shifr}}</small></p>
+<div class="card mb-3" style="max-width: 900px;">
+  <div class="row g-0">
+    <div class="col-md-4">
+    <img class="product-detail" src="{{ good.picture.url }}" width="300" height="400";>
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <span class="price">₽ {{ good.price }}</span>
+        <a href="#" class="button">В корзину</a>
+        <p class="card-text">{{good.description}}</p>
+        <p>От бренда: {{good.brand}}</p>
+        <p>Цвет: {{good.color}}</p>
+        <p>Состав: {{good.composition}}</p>
+        <p>Продавец: <a href="#">{{ good.seller }}</a></p> <!-- seller detail link not yet defined -->
+        <p>Тэги: {% for tag in good.tag.all %} <a href="#">{{ tag }}</a> {% if not forloop.last %}, {% endif %}{% endfor %}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
+from django.views.generic import RedirectView
 
 from marketplace import settings
 
@@ -24,6 +25,7 @@ urlpatterns = [
     path('main/', include('main.urls')),
     path('pages/', include('django.contrib.flatpages.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
+    path('', RedirectView.as_view(url='main/', permanent=True)),
 ]
 
 if settings.DEBUG:
