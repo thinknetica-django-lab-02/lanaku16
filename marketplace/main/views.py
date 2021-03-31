@@ -18,12 +18,23 @@ def index(request):
 class GoodListView(generic.ListView):
     model = Good
     template_name = 'main/goodlist.html'
-    queryset = Good.objects.all()
+    #queryset = Good.objects.all()
+    paginate_by = 10
+    context_object_name = "searchres"
 
     def get_context_data(self, **kwargs):
         context = super(GoodListView, self).get_context_data(**kwargs)
         context['username'] = "123"
+        tag = self.request.GET.get('tag')
+        context['tag'] = tag
         return context
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        tag = self.request.GET.get('tag')
+        if tag:
+            return queryset.filter(tag__tag_name=tag)
+        return queryset
 
 
 class GoodDetailView(generic.DetailView):
