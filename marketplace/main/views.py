@@ -1,13 +1,17 @@
 from datetime import datetime
 
 from django.contrib import auth
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.forms import inlineformset_factory
+from django.http import request
 from django.shortcuts import render
 
 # Create your views here.
 from django.shortcuts import render
 from django.views import generic
 
-from main.models import Good
+from main.forms import ProfileForm, ProfileFormset
+from main.models import *
 
 
 def index(request):
@@ -18,7 +22,6 @@ def index(request):
 class GoodListView(generic.ListView):
     model = Good
     template_name = 'main/goodlist.html'
-    #queryset = Good.objects.all()
     paginate_by = 10
     context_object_name = "searchres"
 
@@ -47,3 +50,12 @@ def about(request):
 
 def contacts(request):
     return render(request, 'pages/contacts.html')
+
+
+class ProfileUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = Profile
+    template_name = 'main/profile_update.html'
+
+    def get_queryset(self):
+        return Profile.objects.filter(user=self.request.user)
+
