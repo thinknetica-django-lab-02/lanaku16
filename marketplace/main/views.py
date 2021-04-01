@@ -24,7 +24,6 @@ class GoodListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super(GoodListView, self).get_context_data(**kwargs)
-        context['username'] = "123"
         tag = self.request.GET.get('tag')
         context['tag'] = tag
         return context
