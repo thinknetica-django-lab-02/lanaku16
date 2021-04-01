@@ -15,7 +15,3 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('birth_date',)
-
-
-
-ProfileFormset = inlineformset_factory(User, Profile, fields='__all__', can_delete=False)

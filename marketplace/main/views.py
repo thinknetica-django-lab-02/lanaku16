@@ -59,22 +59,21 @@ def contacts(request):
 @transaction.atomic
 def update_profile(request, pk):
     user = User.objects.get(id=pk)
+    ProfileFormset = inlineformset_factory(User, Profile, fields='__all__', can_delete=False)
     if request.method == 'POST':
         user_form = UserForm(request.POST, instance=request.user)
-        profile_form = ProfileForm(request.POST, instance=request.user.profile)
-        if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
-            profile_form.save()
+        formset = ProfileFormset(request.POST, request.FILES, instance=request.user.profile)
+        if user_form.is_valid() and formset.is_valid():
+            u = user_form.save()
+            for form in formset.forms:
+                up = form.save(commit=False)
+                up.user = u
+                up.save()
             messages.success(request, 'Ваш профиль был успешно обновлен!')
-            #return redirect('settings:profile')
         else:
-            pass
             messages.error(request, 'Пожалуйста, исправьте ошибки.')
     else:
         user_form = UserForm(instance=request.user)
-        profile_form = ProfileForm(instance=request.user.profile)
-    return render(request, 'main/profile_update.html', {
-        'user_form': user_form,
-        'profile_form': profile_form
-    })
+        formset = ProfileFormset(instance=request.user.profile)
+    return render(request, 'main/profile_update.html', locals())
 
