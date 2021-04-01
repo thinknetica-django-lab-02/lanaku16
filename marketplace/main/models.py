@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class Seller(models.Model):
@@ -77,13 +79,16 @@ class Good(models.Model):
 
 
 class Profile(models.Model):
-#class Profile(User):
     """Профиль"""
     user = models.OneToOneField(auto_created=True, on_delete=models.CASCADE, parent_link=True,
                          primary_key=True, serialize=False, to='auth.user')
+    birth_date = models.DateField(null=True, blank=True)
 
-    def __str__(self):
-        return "UserProfile(models)"
+    @receiver(post_save, sender=User)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            Profile.objects.create(user=instance)
 
-    def get_absolute_url(self):
-        return reverse('profile_update', kwargs={'pk': self.pk})
+    @receiver(post_save, sender=User)
+    def save_user_profile(sender, instance, **kwargs):
+        instance.profile.save()

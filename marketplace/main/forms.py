@@ -6,10 +6,16 @@ from django.forms import TextInput, EmailInput, formset_factory
 from .models import *
 
 
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'email')
+
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ('first_name', 'last_name', 'email')
+        fields = ('birth_date',)
+
 
 
 ProfileFormset = inlineformset_factory(User, Profile, fields='__all__', can_delete=False)

@@ -6,11 +6,11 @@
 {% endblock %}
 
 {% block content %}
-
-<form action="" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    {{ formset.as_p }}
-    <button type="submit">Сохранить</button>
+<h1>Редактирование профиля</h1>
+<form method="post">
+  {% csrf_token %}
+  {{ user_form.as_p }}
+  {{ profile_form.as_p }}
+  <button class="btn btn-primary" type="submit">Сохранить</button>
 </form>
 {% endblock %}

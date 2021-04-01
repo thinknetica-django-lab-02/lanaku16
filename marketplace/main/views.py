@@ -1,16 +1,19 @@
 from datetime import datetime
 
 from django.contrib import auth
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
+from django.db import transaction
 from django.forms import inlineformset_factory
 from django.http import request
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.shortcuts import render
 from django.views import generic
 
-from main.forms import ProfileForm, ProfileFormset
+from main.forms import ProfileForm, UserForm
 from main.models import *
 
 
@@ -52,10 +55,26 @@ def contacts(request):
     return render(request, 'pages/contacts.html')
 
 
-class ProfileUpdateView(LoginRequiredMixin, generic.UpdateView):
-    model = Profile
-    template_name = 'main/profile_update.html'
-
-    def get_queryset(self):
-        return Profile.objects.filter(user=self.request.user)
+@login_required
+@transaction.atomic
+def update_profile(request, pk):
+    user = User.objects.get(id=pk)
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance=request.user)
+        profile_form = ProfileForm(request.POST, instance=request.user.profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, 'Ваш профиль был успешно обновлен!')
+            #return redirect('settings:profile')
+        else:
+            pass
+            messages.error(request, 'Пожалуйста, исправьте ошибки.')
+    else:
+        user_form = UserForm(instance=request.user)
+        profile_form = ProfileForm(instance=request.user.profile)
+    return render(request, 'main/profile_update.html', {
+        'user_form': user_form,
+        'profile_form': profile_form
+    })
 
