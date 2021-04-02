@@ -11,11 +11,11 @@ class Seller(models.Model):
                                    verbose_name="Наименование организации")
     mode = models.CharField(max_length=50, help_text="Введите форму организации",
                             verbose_name="Форма организации")  # ИП, Самозанятый и тд
-    INN = models.CharField(max_length=12, help_text="Введите ИНН организации",
+    inn = models.CharField(max_length=12, help_text="Введите ИНН организации",
                            verbose_name="ИНН организации")  # функция проверки ИНН
-    Boss_name = models.CharField(max_length=50, help_text="Введите ФИО руководителя", verbose_name="ФИО руководителя")
-    OKPO = models.CharField(max_length=8, help_text="Введите ОКПО организации", verbose_name="ОКПО организации")
-    OGRNIP = models.CharField(max_length=13, help_text="Введите ОГРНИП организации", verbose_name="ОГРНИП организации")
+    boss_name = models.CharField(max_length=50, help_text="Введите ФИО руководителя", verbose_name="ФИО руководителя")
+    okpo = models.CharField(max_length=8, help_text="Введите ОКПО организации", verbose_name="ОКПО организации")
+    ogrnip = models.CharField(max_length=13, help_text="Введите ОГРНИП организации", verbose_name="ОГРНИП организации")
     email = models.EmailField(max_length=50, help_text="Введите e-mail организации", verbose_name="e-mail организации")
     date_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     date_update = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
