@@ -52,13 +52,3 @@ width="300";
 height="400";
 }
 
-.user {
-  display: flex;
-  align-items: center;
-}
-
-.user-photo {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-}

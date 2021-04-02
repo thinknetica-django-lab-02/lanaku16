@@ -1,5 +1,6 @@
 {% extends 'main/base.html' %}
 {% load static %}
+{% load thumbnail %}
 
 {% block title %}
     Каталог товаров
@@ -15,9 +16,11 @@
 <p class="card-text"><small class="text-muted">Артикул: {{good.good_shifr}}</small></p>
 <div class="card mb-3" style="max-width: 900px;">
   <div class="row g-0">
-    <div class="col-md-4">
-    <img class="product-detail" src="{{ good.picture.url }}" width="300" height="400";>
-    </div>
+    {% thumbnail  good.picture  "300x400" crop="center" as im %}
+      <div class="col-md-4">
+        <img class="product-detail" src="{{ im.url }}">
+      </div>
+    {% endthumbnail %}
     <div class="col-md-8">
       <div class="card-body">
         <span class="price">₽ {{ good.price }}</span>
