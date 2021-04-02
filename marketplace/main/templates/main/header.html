@@ -19,7 +19,9 @@
         </div>
         <span class="navbar-text">
             {% if user %}
-                <a href="#">{{ user }}</a>
+                <a class="user" href="#">{{ user }}
+                    <img src="{{ profile.picture.url }}" alt="" class="user-photo">
+                </a>
             {% else %}
                 <a href="#">Войти</a>
             {% endif %}
