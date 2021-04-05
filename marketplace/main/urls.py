@@ -10,5 +10,6 @@ urlpatterns = [
     path('goods/<int:pk>/edit', views.GoodUpdateView.as_view(), name='good-update'),
     path('about', views.about, name='about'),
     path('contacts', views.contacts, name='contacts'),
-    path('accounts/profile/<int:pk>', views.update_profile, name='update_profile'),
+    path('accounts/profile/<int:pk>', views.update_profile, name='update-profile'),
+    path('accounts/login', views.login, name='login'),
 ]

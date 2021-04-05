@@ -19,14 +19,15 @@
           </ul>
         </div>
         <span class="navbar-text">
-            {% if user %}
+            {% if request.user.is_authenticated %}
                 {% thumbnail  profile.picture  "40x40" crop="center" as im %}
-                    <a class="user" href="#">{{ user }}
+                    <a class="user" href="{% url 'update-profile' request.user.pk %}">{{ user }}
                         <img src="{{ im.url }}" alt="" class="image-detail">
                     </a>
                 {% endthumbnail %}
             {% else %}
-                <a href="#">Войти</a>
+                <a href="{% url 'login' %}">Авторизация</a>
+                <a href="#">Регистрация</a>
             {% endif %}
         </span>
       </div>

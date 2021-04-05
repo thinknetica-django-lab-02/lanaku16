@@ -19,14 +19,22 @@ from main.models import *
 
 
 def index(request):
-    username = auth.get_user(request).username
-    user_id = User.objects.get(username=username)
-    profile = Profile.objects.get(pk=user_id)
+    if request.user.is_authenticated:
+        username = auth.get_user(request).username
+        user_id = User.objects.get(username=username)
+        profile = Profile.objects.get(pk=user_id)
+        context = {'username': username,
+                   'turn_on_block': True,
+                   'profile': profile
+                  }
+    else:
+        context = {'username': '',
+                   'turn_on_block': True,
+                   'profile': ''
+                   }
+
     return render(request, 'main/index.html',
-                  context={'username': username,
-                           'turn_on_block': True,
-                           'profile': profile
-                           }
+                  context=context
                   )
 
 
@@ -75,6 +83,8 @@ def about(request):
 def contacts(request):
     return render(request, 'pages/contacts.html')
 
+def login(request):
+    return render(request, 'main/login.html')
 
 @login_required
 @transaction.atomic
