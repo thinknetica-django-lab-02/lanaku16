@@ -1,9 +1,12 @@
 from datetime import datetime
 
 from django.contrib import auth
+from django.contrib.auth import logout, login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from django.contrib.auth.views import LoginView
 from django.db import transaction
 from django.forms import inlineformset_factory
 from django.http import request
@@ -83,8 +86,26 @@ def about(request):
 def contacts(request):
     return render(request, 'pages/contacts.html')
 
-def login(request):
-    return render(request, 'main/login.html')
+
+class RegisterUser(generic.CreateView):
+    form_class = UserCreationForm
+    template_name = 'main/register.html'
+
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
+        return redirect('home')
+
+
+class LoginUser(LoginView):
+    form_class = AuthenticationForm
+    template_name = 'main/login.html'
+
+
+def logout_user(request):
+    logout(request)
+    return redirect('login')
+
 
 @login_required
 @transaction.atomic

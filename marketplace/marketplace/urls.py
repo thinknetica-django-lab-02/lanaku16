@@ -26,6 +26,7 @@ urlpatterns = [
     path('pages/', include('django.contrib.flatpages.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('', RedirectView.as_view(url='main/', permanent=True)),
+    path('accounts/', include('allauth.urls')),
 ]
 
 if settings.DEBUG:
