@@ -13,7 +13,7 @@ from django.shortcuts import render, redirect
 from django.shortcuts import render
 from django.views import generic
 
-from main.forms import ProfileForm, UserForm
+from main.forms import ProfileForm, UserForm, ProfileFormset
 from main.models import *
 
 
@@ -58,7 +58,7 @@ def contacts(request):
 @transaction.atomic
 def update_profile(request, pk):
     user = User.objects.get(id=pk)
-    ProfileFormset = inlineformset_factory(User, Profile, fields='__all__', can_delete=False)
+    #ProfileFormset = inlineformset_factory(User, Profile, fields=('birth_date',), can_delete=False)
     if request.method == 'POST':
         user_form = UserForm(request.POST, instance=request.user)
         formset = ProfileFormset(request.POST, request.FILES, instance=request.user.profile)
