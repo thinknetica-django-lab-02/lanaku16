@@ -8,4 +8,5 @@ urlpatterns = [
     path('goods/<int:pk>', views.GoodDetailView.as_view(), name='good-detail'),
     path('about', views.about, name='about'),
     path('contacts', views.contacts, name='contacts'),
+    path('accounts/profile/<int:pk>', views.update_profile, name='update_profile'),
 ]

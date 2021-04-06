@@ -85,12 +85,9 @@
     {% endif %}
 {% endblock %}
 
-<footer class="footer">
-    {% if turn_on_block %}
-      <div class="container">
-        <span class="text-muted">Текущее время: {% current_time %}</span>
-      </div>
-    {% endif %}
-</footer>
+{% block footer %}
+    {% include 'main/footer.html' %}
+{%endblock%}
+
 </body>
 </html>

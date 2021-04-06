@@ -1,13 +1,20 @@
 from datetime import datetime
 
 from django.contrib import auth
-from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
+from django.db import transaction
+from django.forms import inlineformset_factory
+from django.http import request
+from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.shortcuts import render
 from django.views import generic
 
-from main.models import Good
+from main.forms import ProfileForm, UserForm
+from main.models import *
 
 
 def index(request):
@@ -18,7 +25,6 @@ def index(request):
 class GoodListView(generic.ListView):
     model = Good
     template_name = 'main/goodlist.html'
-    #queryset = Good.objects.all()
     paginate_by = 10
     context_object_name = "searchres"
 
@@ -46,3 +52,27 @@ def about(request):
 
 def contacts(request):
     return render(request, 'pages/contacts.html')
+
+
+@login_required
+@transaction.atomic
+def update_profile(request, pk):
+    user = User.objects.get(id=pk)
+    ProfileFormset = inlineformset_factory(User, Profile, fields='__all__', can_delete=False)
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance=request.user)
+        formset = ProfileFormset(request.POST, request.FILES, instance=request.user.profile)
+        if user_form.is_valid() and formset.is_valid():
+            u = user_form.save()
+            for form in formset.forms:
+                up = form.save(commit=False)
+                up.user = u
+                up.save()
+            messages.success(request, 'Ваш профиль был успешно обновлен!')
+        else:
+            messages.error(request, 'Пожалуйста, исправьте ошибки.')
+    else:
+        user_form = UserForm(instance=request.user)
+        formset = ProfileFormset(instance=request.user.profile)
+    return render(request, 'main/profile_update.html', locals())
+

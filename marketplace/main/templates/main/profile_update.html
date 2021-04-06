@@ -1,0 +1,19 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}
+    Редактирование профиля
+{% endblock %}
+
+{% block content %}
+<h1>Редактирование профиля</h1>
+<form method="post">
+    {% csrf_token %}
+    {{formset.management_form}}
+    {{ user_form.as_p }}
+    {% for ft in formset%}
+        {{ ft }}
+    {% endfor %}
+  <button class="btn btn-primary" type="submit">Сохранить</button>
+</form>
+{% endblock %}
