@@ -82,7 +82,8 @@ class Profile(models.Model):
     """Профиль"""
     user = models.OneToOneField(auto_created=True, on_delete=models.CASCADE, parent_link=True,
                          primary_key=True, serialize=False, to='auth.user')
-    birth_date = models.DateField(null=True, blank=True)
+    birth_date = models.DateField(null=True, blank=True, verbose_name='Дата рождения')
+    picture = models.ImageField(upload_to="users/", verbose_name='Аватар', blank=True)
 
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):

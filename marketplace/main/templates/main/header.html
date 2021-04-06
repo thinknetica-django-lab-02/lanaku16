@@ -1,3 +1,4 @@
+{% load thumbnail %}
 <header>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
@@ -19,7 +20,11 @@
         </div>
         <span class="navbar-text">
             {% if user %}
-                <a href="#">{{ user }}</a>
+                {% thumbnail  profile.picture  "40x40" crop="center" as im %}
+                    <a class="user" href="#">{{ user }}
+                        <img src="{{ im.url }}" alt="" class="image-detail">
+                    </a>
+                {% endthumbnail %}
             {% else %}
                 <a href="#">Войти</a>
             {% endif %}

@@ -19,8 +19,15 @@ from main.models import *
 
 
 def index(request):
+    username = auth.get_user(request).username
+    user_id = User.objects.get(username=username)
+    profile = Profile.objects.get(pk=user_id)
     return render(request, 'main/index.html',
-                  context={'username': auth.get_user(request).username, 'turn_on_block': True})
+                  context={'username': username,
+                           'turn_on_block': True,
+                           'profile': profile
+                           }
+                  )
 
 
 class GoodListView(generic.ListView):
