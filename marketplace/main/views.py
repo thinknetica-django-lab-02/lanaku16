@@ -11,9 +11,10 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.views import generic
 
-from main.forms import ProfileForm, UserForm, ProfileFormset
+from main.forms import ProfileForm, UserForm, ProfileFormset, GoodAddForm, GoodUpdateForm
 from main.models import *
 
 
@@ -44,6 +45,19 @@ class GoodListView(generic.ListView):
 
 class GoodDetailView(generic.DetailView):
     model = Good
+
+
+class GoodAddView(generic.CreateView):
+    model = Good
+    form_class = GoodAddForm
+    success_url = reverse_lazy('goods')
+
+
+class GoodUpdateView(generic.UpdateView):
+    model = Good
+    form_class = GoodUpdateForm
+    template_name_suffix = '_update_form'
+    success_url = reverse_lazy('goods')
 
 
 def about(request):

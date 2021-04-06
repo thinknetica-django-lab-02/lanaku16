@@ -1,0 +1,20 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}
+    Редактирование товара
+{% endblock %}
+
+{% block header %}
+    {% include 'main/header.html' with user=username %}
+{% endblock %}
+
+{% block content %}
+<h1>Редактирование товара</h1>
+<form method="post"  enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.media }}
+    {{ form.as_p }}
+    <input class="btn btn-primary" type="submit" value="Сохранить">
+</form>
+{% endblock %}
