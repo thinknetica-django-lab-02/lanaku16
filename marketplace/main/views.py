@@ -15,7 +15,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 
 from main.forms import ProfileForm, UserForm, ProfileFormset, GoodAddForm, GoodUpdateForm
-from main.models import *
+from main.models import Seller, Tag, Category, Good, Profile
 
 
 def index(request):
@@ -83,8 +83,10 @@ def about(request):
 def contacts(request):
     return render(request, 'pages/contacts.html')
 
+
 def login(request):
     return render(request, 'main/login.html')
+
 
 @login_required
 @transaction.atomic
@@ -95,11 +97,11 @@ def update_profile(request, pk):
         user_form = UserForm(request.POST, instance=request.user)
         formset = ProfileFormset(request.POST, request.FILES, instance=request.user.profile)
         if user_form.is_valid() and formset.is_valid():
-            u = user_form.save()
+            data_user = user_form.save()
             for form in formset.forms:
-                up = form.save(commit=False)
-                up.user = u
-                up.save()
+                data_user_form = form.save(commit=False)
+                data_user_form.user = data_user
+                data_user_form.save()
             messages.success(request, 'Ваш профиль был успешно обновлен!')
         else:
             messages.error(request, 'Пожалуйста, исправьте ошибки.')
