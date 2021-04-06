@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django.contrib import auth
 from django.contrib.auth import logout, login
+from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -93,6 +94,8 @@ class RegisterUser(generic.CreateView):
 
     def form_valid(self, form):
         user = form.save()
+        group = Group.objects.get(name='common users')
+        user.groups.add(group)
         login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
         return redirect('home')
 
