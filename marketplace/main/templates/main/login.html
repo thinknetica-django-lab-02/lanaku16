@@ -1,0 +1,21 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% load socialaccount %}
+{% providers_media_js %}
+
+
+{% block title %}
+    Авторизация
+{% endblock %}
+
+{% block content %}
+<h1>Авторизация</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="d-grid gap-2 col-6 mx-auto">
+      <input class="btn btn-primary" type="submit" value="Войти">
+      <button class="btn btn-outline-danger" ><a href="{% provider_login_url 'google' %}">Войти через Google аккаунт</a></button>
+    </div>
+</form>
+{% endblock %}

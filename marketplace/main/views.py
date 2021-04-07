@@ -15,18 +15,26 @@ from django.urls import reverse_lazy
 from django.views import generic
 
 from main.forms import ProfileForm, UserForm, ProfileFormset, GoodAddForm, GoodUpdateForm
-from main.models import *
+from main.models import Seller, Tag, Category, Good, Profile
 
 
 def index(request):
-    username = auth.get_user(request).username
-    user_id = User.objects.get(username=username)
-    profile = Profile.objects.get(pk=user_id)
+    if request.user.is_authenticated:
+        username = auth.get_user(request).username
+        user_id = User.objects.get(username=username)
+        profile = Profile.objects.get(pk=user_id)
+        context = {'username': username,
+                   'turn_on_block': True,
+                   'profile': profile
+                  }
+    else:
+        context = {'username': '',
+                   'turn_on_block': True,
+                   'profile': ''
+                   }
+
     return render(request, 'main/index.html',
-                  context={'username': username,
-                           'turn_on_block': True,
-                           'profile': profile
-                           }
+                  context=context
                   )
 
 
@@ -75,6 +83,10 @@ def contacts(request):
     return render(request, 'pages/contacts.html')
 
 
+def login(request):
+    return render(request, 'main/login.html')
+
+
 @login_required
 @transaction.atomic
 def update_profile(request, pk):
@@ -84,11 +96,11 @@ def update_profile(request, pk):
         user_form = UserForm(request.POST, instance=request.user)
         formset = ProfileFormset(request.POST, request.FILES, instance=request.user.profile)
         if user_form.is_valid() and formset.is_valid():
-            u = user_form.save()
+            data_user = user_form.save()
             for form in formset.forms:
-                up = form.save(commit=False)
-                up.user = u
-                up.save()
+                data_user_form = form.save(commit=False)
+                data_user_form.user = data_user
+                data_user_form.save()
             messages.success(request, 'Ваш профиль был успешно обновлен!')
         else:
             messages.error(request, 'Пожалуйста, исправьте ошибки.')
