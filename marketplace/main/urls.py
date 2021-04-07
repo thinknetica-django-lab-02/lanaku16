@@ -11,5 +11,8 @@ urlpatterns = [
     path('about', views.about, name='about'),
     path('contacts', views.contacts, name='contacts'),
     path('accounts/profile/<int:pk>', views.update_profile, name='update-profile'),
-    path('accounts/login', views.login, name='login'),
+    path('accounts/register', views.RegisterUser.as_view(), name='register'),
+    path('accounts/login', views.LoginUser.as_view(), name='login'),
+    path('accounts/logout', views.logout_user, name='logout'),
+
 ]
