@@ -3,9 +3,9 @@ from datetime import datetime
 from django.contrib import auth
 from django.contrib.auth import logout, login
 from django.contrib.auth.models import Group
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib import messages
 from django.contrib.auth.views import LoginView
 from django.db import transaction
@@ -66,13 +66,19 @@ class GoodDetailView(generic.DetailView):
     model = Good
 
 
-class GoodAddView(generic.CreateView):
+class GoodAddView(PermissionRequiredMixin, generic.CreateView):
+    def has_permission(self):
+        return self.request.user.groups.filter(name='sellers').exists()
+
     model = Good
     form_class = GoodAddForm
     success_url = reverse_lazy('goods')
 
 
-class GoodUpdateView(generic.UpdateView):
+class GoodUpdateView(PermissionRequiredMixin, generic.UpdateView):
+    def has_permission(self):
+        return self.request.user.groups.filter(name='sellers').exists()
+
     model = Good
     form_class = GoodUpdateForm
     template_name_suffix = '_update_form'
