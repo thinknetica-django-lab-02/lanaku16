@@ -145,3 +145,5 @@ LOGIN_URL = 'register'
 LOGIN_REDIRECT_URL = '/'
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

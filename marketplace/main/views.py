@@ -8,6 +8,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib import messages
 from django.contrib.auth.views import LoginView
+from django.core.mail import EmailMessage
 from django.db import transaction
 from django.forms import inlineformset_factory
 from django.http import request
@@ -18,7 +19,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
 
-from main.forms import ProfileForm, UserForm, ProfileFormset, GoodAddForm, GoodUpdateForm
+from main.forms import ProfileForm, UserForm, ProfileFormset, GoodAddForm, GoodUpdateForm, UseRegistForm
 from main.models import Seller, Tag, Category, Good, Profile
 
 
@@ -94,13 +95,15 @@ def contacts(request):
 
 
 class RegisterUser(generic.CreateView):
-    form_class = UserCreationForm
+    form_class = UseRegistForm
     template_name = 'main/register.html'
 
     def form_valid(self, form):
         user = form.save()
         group = Group.objects.get(name='common users')
         user.groups.add(group)
+        email = EmailMessage('Спасибо за регистрацию на сайте', 'Вы прошли регистрацию на сайте Marketplace', to=[user.email])
+        email.send()
         login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
         return redirect('home')
 

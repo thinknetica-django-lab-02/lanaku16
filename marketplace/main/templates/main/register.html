@@ -12,8 +12,11 @@
 <h1>Регистрация</h1>
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <div class="d-grid gap-2 col-6 mx-auto">
+    {% for f in form %}
+        <p><label class="col-sm-2 col-form-label" for="{{ f.id_for_label }}">{{ f.label }}</label>{{ f }}</p>
+        <div><span class="badge bg-danger">{{ f.errors }}</span></div>
+    {% endfor %}
+    <div class="d-grid gap-2 col-6">
       <input class="btn btn-primary" type="submit" value="Регистрация">
       <button class="btn btn-outline-danger" ><a href="{% provider_login_url 'google' %}">Регистрация через Google аккаунт</a></button>
     </div>

@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django import forms
 from django.contrib.admin.widgets import AdminDateWidget
+from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 from django.forms.models import inlineformset_factory
 from django.forms.models import BaseInlineFormSet
@@ -30,6 +31,17 @@ class GoodUpdateForm(forms.ModelForm):
         widgets = {
             'description': forms.Textarea(attrs={'cols':60, 'rows':10}),
         }
+
+
+class UseRegistForm(UserCreationForm):
+    username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'class': 'form-input'}))
+    password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+    password2 = forms.CharField(label='Пароль еще раз', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+    email = forms.EmailField(label='Email', widget=forms.TextInput(attrs={'class': 'form-input'}))
+
+    class Meta:
+        model = User
+        fields = ('username', 'password1', 'password2', 'email')
 
 
 class UserForm(forms.ModelForm):
