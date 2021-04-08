@@ -1,0 +1,14 @@
+{% load account %}
+{% load i18n %}
+
+{% block content %}
+{% autoescape off %}
+{% user_display user as user_display %}
+{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}
+Вы получили это сообщение, потому что пользователь {{ user_display }}
+указал ваш email, чтобы зарегистироваться на сайте {{ site_domain }}.
+
+Чтобы подтвердить регистрацию, пройдите по ссылке {{ activate_url }}
+{% endblocktrans %}
+{% endautoescape %}
+{% endblock %}
