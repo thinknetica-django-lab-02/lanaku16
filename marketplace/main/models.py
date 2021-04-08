@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
+from django.core.mail import EmailMessage
 from django.db import models
+from django.db.models import signals
 from django.urls import reverse
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -81,7 +83,7 @@ class Good(models.Model):
 class Profile(models.Model):
     """Профиль"""
     user = models.OneToOneField(auto_created=True, on_delete=models.CASCADE, parent_link=True,
-                         primary_key=True, serialize=False, to='auth.user')
+                                primary_key=True, serialize=False, to='auth.user')
     birth_date = models.DateField(null=True, blank=True, verbose_name='Дата рождения')
     picture = models.ImageField(upload_to="users/", verbose_name='Аватар', blank=True)
 
@@ -93,3 +95,29 @@ class Profile(models.Model):
     @receiver(post_save, sender=User)
     def save_user_profile(sender, instance, **kwargs):
         instance.profile.save()
+
+
+class Subscriber(models.Model):
+    """Подписчики"""
+    user = models.OneToOneField(User, on_delete=models.CASCADE, )
+
+
+def go_subscrib(sender, instance, created, **kwargs):
+    if created:
+        title = instance.good_name.encode('utf-8')
+        for subscrib_user in Subscriber.objects.all():
+            user = User.objects.get(id=subscrib_user.user_id)
+            print(user)
+            to_email = user.email
+            print(to_email)
+            subject = 'Новый товар на сайте'
+            html_content = '<p><i>Здравствуйте</i></p>'
+            html_content += 'Новый товар: <a href="http://127.0.0.1:8000/main/goods/%s">%s</a>' % (instance.id, title)
+            html_content += '<p><i>Всего доброго.</i></p>'
+            from_email = 'admin@marketplace.ru'
+            email = EmailMessage(subject, html_content, from_email, [to_email])
+            email.content_subtype = "html"
+            email.send()
+
+
+signals.post_save.connect(go_subscrib, sender=Good)
