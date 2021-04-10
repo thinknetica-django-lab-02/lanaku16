@@ -48,6 +48,7 @@ INSTALLED_APPS = (
     'sorl.thumbnail',
     'ckeditor',
     'ckeditor_uploader',
+    'django_apscheduler',
     'main.apps.MainConfig',
 )
 
@@ -147,3 +148,6 @@ LOGIN_REDIRECT_URL = '/'
 CKEDITOR_UPLOAD_PATH = "uploads/"
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+APSCHEDULER_RUN_NOW_TIMEOUT = 25

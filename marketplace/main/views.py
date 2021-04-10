@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.contrib import auth
 from django.contrib.auth import logout, login
@@ -18,9 +18,15 @@ from django.shortcuts import render, redirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
+from django.utils import timezone
 
 from main.forms import ProfileForm, UserForm, ProfileFormset, GoodAddForm, GoodUpdateForm, UseRegistForm
 from main.models import Seller, Tag, Category, Good, Profile
+
+import time
+
+from apscheduler.schedulers.background import BackgroundScheduler
+from django_apscheduler.jobstores import DjangoJobStore, register_events, register_job
 
 
 def index(request):
@@ -143,3 +149,17 @@ def update_profile(request, pk):
         formset = ProfileFormset(instance=request.user.profile)
     return render(request, 'main/profile_update.html', locals())
 
+
+
+scheduler = BackgroundScheduler()
+scheduler.add_jobstore(DjangoJobStore(), "default")
+
+@register_job(scheduler, "cron", day_of_week="mon", hour="12", minute="00", second="00", replace_existing=True)
+def send_subscrib_mail_about_new_goods():
+    date_minus_7days = (datetime.now().date() - timedelta(days=7))
+    date_minus_7days = timezone.now()
+    goods_per_week = Good.objects.filter(date_create__lte=date_minus_7days)
+
+register_events(scheduler)
+
+scheduler.start()
