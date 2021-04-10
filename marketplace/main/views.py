@@ -150,7 +150,6 @@ def update_profile(request, pk):
     return render(request, 'main/profile_update.html', locals())
 
 
-
 scheduler = BackgroundScheduler()
 scheduler.add_jobstore(DjangoJobStore(), "default")
 
