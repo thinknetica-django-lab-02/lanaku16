@@ -102,7 +102,10 @@ class RegisterUser(generic.CreateView):
         user = form.save()
         group = Group.objects.get(name='common users')
         user.groups.add(group)
-        email = EmailMessage('Спасибо за регистрацию на сайте', 'Вы прошли регистрацию на сайте Marketplace', to=[user.email])
+        email = EmailMessage(
+            'Спасибо за регистрацию на сайте',
+            'Вы прошли регистрацию на сайте Marketplace',
+            to=[user.email])
         email.send()
         login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
         return redirect('home')
