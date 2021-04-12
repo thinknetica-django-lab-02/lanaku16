@@ -153,6 +153,7 @@ def update_profile(request, pk):
 scheduler = BackgroundScheduler()
 scheduler.add_jobstore(DjangoJobStore(), "default")
 
+
 @register_job(scheduler, "cron", day_of_week="mon", hour="12", minute="00", second="00", replace_existing=True)
 def send_subscrib_mail_about_new_goods():
     date_minus_7days = (datetime.now().date() - timedelta(days=7))
