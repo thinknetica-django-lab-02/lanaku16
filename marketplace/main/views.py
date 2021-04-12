@@ -156,9 +156,8 @@ scheduler.add_jobstore(DjangoJobStore(), "default")
 
 @register_job(scheduler, "cron", day_of_week="mon", hour="12", minute="00", second="00", replace_existing=True)
 def send_subscrib_mail_about_new_goods():
-    date_minus_7days = (datetime.now().date() - timedelta(days=7))
-    date_minus_7days = timezone.now()
-    goods_per_week = Good.objects.filter(date_create__lte=date_minus_7days)
+    date_minus_7days = timezone.now() - timedelta(days=7)
+    goods_per_week = Good.objects.filter(date_create__gte=date_minus_7days)
     from_email = 'admin@marketplace.ru'
     subject = 'Новые товары на сайте с %s' % date_minus_7days
     html_content = '<p><i>Здравствуйте</i></p>'
