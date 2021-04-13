@@ -14,7 +14,6 @@ from django.forms import inlineformset_factory
 from django.http import request
 from django.shortcuts import render, redirect
 
-# Create your views here.
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
@@ -27,6 +26,8 @@ import time
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from django_apscheduler.jobstores import DjangoJobStore, register_events, register_job
+
+from main.tasks import send_mail_about_new_good
 
 
 def index(request):
@@ -74,22 +75,32 @@ class GoodDetailView(generic.DetailView):
 
 
 class GoodAddView(PermissionRequiredMixin, generic.CreateView):
-    def has_permission(self):
-        return self.request.user.groups.filter(name='sellers').exists()
-
     model = Good
     form_class = GoodAddForm
     success_url = reverse_lazy('goods')
 
-
-class GoodUpdateView(PermissionRequiredMixin, generic.UpdateView):
     def has_permission(self):
         return self.request.user.groups.filter(name='sellers').exists()
 
+    def form_valid(self, form):
+        form.save()
+        send_mail_about_new_good.delay(form.instance.id)
+        return super().form_valid(form)
+
+
+class GoodUpdateView(PermissionRequiredMixin, generic.UpdateView):
     model = Good
     form_class = GoodUpdateForm
     template_name_suffix = '_update_form'
     success_url = reverse_lazy('goods')
+
+    def has_permission(self):
+        return self.request.user.groups.filter(name='sellers').exists()
+
+    def form_valid(self, form):
+        form.save()
+        send_mail_about_new_good.delay(form.instance.id)
+        return super().form_valid(form)
 
 
 def about(request):
