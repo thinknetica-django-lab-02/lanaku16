@@ -29,6 +29,8 @@ from django_apscheduler.jobstores import DjangoJobStore, register_events, regist
 
 from main.tasks import send_mail_about_new_good
 
+from marketplace.celery import debug_task
+
 
 def index(request):
     if request.user.is_authenticated:
