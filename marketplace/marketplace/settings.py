@@ -118,15 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://localhost:6379/1",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
-    }
-}
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -163,10 +155,6 @@ APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 
 # Celery Configuration Options
 CELERY_TASK_TRACK_STARTED = True
-CELERY_TASK_TIME_LIMIT = 30 * 60
-CELERY_CACHE_BACKEND = 'default'
-REDIS_HOST = '0.0.0.0'
-REDIS_PORT = '6379'
 CELERY_BROKER_URL = 'redis://' + 'localhost:6379' + '/0'
 CELERY_BROKER_TRNASPORT_OPTIONS = {'visibility_timeout': 3600}
 CELERY_RESULT_BACKEND = 'redis://' + 'localhost:6379' + '/0'

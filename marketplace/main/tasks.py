@@ -13,7 +13,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-@app.task
+@shared_task
 def send_mail_about_new_good(good_id):
     logger.info("Отправка email:Запуск таски")
     good_new = Good.objects.get(id=good_id)
@@ -31,3 +31,4 @@ def send_mail_about_new_good(good_id):
         logger.warning("Email отправлен")
 
     logger.info("Отправка email:Окончание таски")
+    return True
