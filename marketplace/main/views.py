@@ -101,7 +101,6 @@ class GoodUpdateView(PermissionRequiredMixin, generic.UpdateView):
 
 
 def about(request):
-    debug_task.delay(request)
     return render(request, 'pages/about.html')
 
 
