@@ -124,3 +124,12 @@ class Subscriber(models.Model):
     #             email.content_subtype = "html"
     #             email.send()
     #             logger.warning("Email отправлен")
+
+
+class SMSLog(models.Model):
+    body = models.IntegerField()
+    from_number = models.CharField(max_length=30)
+    to_number = models.CharField(max_length=30)
+    status_response = models.CharField(max_length=1)
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_sent = models.DateTimeField(auto_now_add=True)

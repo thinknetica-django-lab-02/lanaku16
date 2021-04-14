@@ -1,14 +1,18 @@
 from datetime import datetime, timedelta
+import random
 
 from celery import shared_task
 
 from django.contrib.auth.models import User
 from django.utils import timezone
 
-from main.models import Good, Subscriber
+from main.models import Good, Subscriber, SMSLog
 from marketplace.celery import app
 
 from django.core.mail import EmailMessage
+
+import vonage
+from vonage import Sms
 
 import logging
 
@@ -61,3 +65,26 @@ def monday_mail_about_new_goods():
 
     logger.info("Отправка email в понедельник:Окончание таски")
     return True
+
+@app.task
+def send_random_code(to_number):
+    vonage_key = '1ab4cfed'
+    vonage_secret = 'vptxqpd7HXNO9vTt'
+    from_number = "Vonage APIs"
+    client = vonage.Client(key=vonage_key, secret=vonage_secret)
+    sms = vonage.Sms(client)
+    sms_body = random.randrange(1000, 9999, 1)
+    responseData = sms.send_message(
+        {
+            "from": from_number,
+            "to": to_number,
+            "text": sms_body,
+        }
+    )
+
+    SMSLog.objects.create(
+        body = sms_body,
+        from_number = from_number,
+        to_number = to_number,
+        status_response = responseData["messages"][0]["status"]
+    )
