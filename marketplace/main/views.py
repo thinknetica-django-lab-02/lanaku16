@@ -99,11 +99,6 @@ class GoodUpdateView(PermissionRequiredMixin, generic.UpdateView):
     def has_permission(self):
         return self.request.user.groups.filter(name='sellers').exists()
 
-    def form_valid(self, form):
-        form.save()
-        send_mail_about_new_good.delay(form.instance.id)
-        return super().form_valid(form)
-
 
 def about(request):
     debug_task.delay(request)
