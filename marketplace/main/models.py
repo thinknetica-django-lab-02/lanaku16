@@ -105,28 +105,9 @@ class Subscriber(models.Model):
     """Подписчики"""
     user = models.OneToOneField(User, on_delete=models.CASCADE, )
 
-    # @receiver(post_save, sender=Good)
-    # def go_subscrib(sender, instance, created, self, **kwargs):
-    #     if created:
-    #         title = instance.good_name.encode('utf-8')
-    #         for subscrib_user in Subscriber.objects.all():
-    #             user = User.objects.get(id=subscrib_user.user_id)
-    #             logger.info("Отправка email")
-    #             logger.warning("Пользователь: %s" % user)
-    #             to_email = user.email
-    #             logger.warning("Почта %s " % to_email)
-    #             subject = 'Новый товар на сайте'
-    #             html_content = '<p><i>Здравствуйте</i></p>'
-    #             html_content += 'Новый товар: <a href="http://127.0.0.1:8000/main/goods/%s">%s</a>' % (instance.id, title)
-    #             html_content += '<p><i>Всего доброго.</i></p>'
-    #             from_email = 'admin@marketplace.ru'
-    #             email = EmailMessage(subject, html_content, from_email, [to_email])
-    #             email.content_subtype = "html"
-    #             email.send()
-    #             logger.warning("Email отправлен")
-
 
 class SMSLog(models.Model):
+    """Логи отправки смс"""
     body = models.IntegerField()
     from_number = models.CharField(max_length=30)
     to_number = models.CharField(max_length=30)

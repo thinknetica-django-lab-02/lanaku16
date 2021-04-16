@@ -12,6 +12,14 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+import environ
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+# reading .env file
+environ.Env.read_env()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 from django.conf.global_settings import MEDIA_URL, MEDIA_ROOT
 
@@ -22,10 +30,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '%3)o9+x$2g)-d6xh++0@u&yx%#qwx9st8&jgw(&hbddk8u2hb7'
+SECRET_KEY = env.str('SECRET_KEY', 'sample_unsafe_secret')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = []
 
@@ -162,3 +169,10 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_ACKS_LATE = True
+
+# Custom settings
+ADMIN_EMAIL = 'admin@marketplace.ru'
+DOMAIN_NAME = 'http://127.0.0.1:8000/'
+
+VONAGE_KEY = env.str('VONAGE_KEY', '')
+VONAGE_SECRET = env.str('VONAGE_SECRET', '')

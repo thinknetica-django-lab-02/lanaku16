@@ -3,6 +3,7 @@ import random
 
 from celery import shared_task
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils import timezone
 
@@ -24,11 +25,11 @@ logger = logging.getLogger(__name__)
 def send_mail_about_new_good(good_id):
     logger.info("Отправка email:Запуск таски")
     good_new = Good.objects.get(id=good_id)
-    from_email = 'admin@marketplace.ru'
+    from_email = settings.ADMIN_EMAIL
     subject = 'Новый товар на сайте'
     html_content = '<p><i>Здравствуйте</i></p>'
     html_content += 'На сайте появился новый товар:'
-    html_content += '<a href="http://127.0.0.1:8000/main/goods/%s">%s</a>' % (good_new.id, good_new.good_name)
+    html_content += '<a href="%smain/goods/%s">%s</a>' % (settings.DOMAIN_NAME, good_new.id, good_new.good_name)
     for subscrib_user in Subscriber.objects.all():
         user = User.objects.get(id=subscrib_user.user_id)
         to_email = user.email
@@ -46,14 +47,14 @@ def monday_mail_about_new_goods():
     logger.info("Отправка email в понедельник:Запуск таски")
     date_minus_7days = timezone.now() - timedelta(days=7)
     goods_per_week = Good.objects.filter(date_create__gte=date_minus_7days)
-    from_email = 'admin@marketplace.ru'
+    from_email = settings.ADMIN_EMAIL
     subject = 'Новые товары на сайте с %s' % date_minus_7days
     html_content = '<p><i>Здравствуйте</i></p>'
     html_content += 'Новые товары:'
 
     for goodone in goods_per_week:
         title = goodone.good_name
-        html_content += '<a href="http://127.0.0.1:8000/main/goods/%s">%s</a>' % (goodone.id, title)
+        html_content += '<a href="%smain/goods/%s">%s</a>' % (settings.DOMAIN_NAME, goodone.id, title)
 
     for subscrib_user in Subscriber.objects.all():
         user = User.objects.get(id=subscrib_user.user_id)
@@ -66,12 +67,11 @@ def monday_mail_about_new_goods():
     logger.info("Отправка email в понедельник:Окончание таски")
     return True
 
+
 @app.task
 def send_random_code(to_number):
-    vonage_key = '1ab4cfed'
-    vonage_secret = 'vptxqpd7HXNO9vTt'
     from_number = "Vonage APIs"
-    client = vonage.Client(key=vonage_key, secret=vonage_secret)
+    client = vonage.Client(key=settings.VONAGE_KEY, secret=settings.VONAGE_SECRET)
     sms = vonage.Sms(client)
     sms_body = random.randrange(1000, 9999, 1)
     responseData = sms.send_message(
@@ -83,8 +83,8 @@ def send_random_code(to_number):
     )
 
     SMSLog.objects.create(
-        body = sms_body,
-        from_number = from_number,
-        to_number = to_number,
-        status_response = responseData["messages"][0]["status"]
+        body=sms_body,
+        from_number=from_number,
+        to_number=to_number,
+        status_response=responseData["messages"][0]["status"]
     )
