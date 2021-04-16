@@ -8,6 +8,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib import messages
 from django.contrib.auth.views import LoginView
+from django.core.cache import cache
 from django.core.mail import EmailMessage
 from django.db import transaction
 from django.forms import inlineformset_factory
@@ -74,6 +75,15 @@ class GoodListView(generic.ListView):
 
 class GoodDetailView(generic.DetailView):
     model = Good
+
+    def get_context_data(self, **kwargs):
+        context = super(GoodDetailView, self).get_context_data(**kwargs)
+        view_counter = cache.get('view_counter')
+        if not view_counter:
+            cache.set('view_counter', 0)
+        view_counter = cache.incr('view_counter', delta=1, version=None)
+        context['view_counter'] = view_counter
+        return context
 
 
 class GoodAddView(PermissionRequiredMixin, generic.CreateView):
