@@ -118,6 +118,14 @@ def contacts(request):
     return render(request, 'pages/contacts.html')
 
 
+def delivery(request):
+    return render(request, 'pages/delivery.html')
+
+
+def pay(request):
+    return render(request, 'pages/pay.html')
+
+
 class RegisterUser(generic.CreateView):
     form_class = UseRegistForm
     template_name = 'main/register.html'

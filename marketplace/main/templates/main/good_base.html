@@ -1,0 +1,13 @@
+<div class="col">
+    <div class="product-item">
+        <a href="{{ good.get_absolute_url }}">
+            <img src="{{ good.picture.url }}">
+        </a>
+      <p>{% for tag in good.tag.all %} <a href="{{ request.path }}?tag={{ tag }}">{{ tag }}</a> {% if not forloop.last %}, {% endif %}{% endfor %}</p>
+      <div class="product-list">
+        <h3>{{ good.good_name|truncatechars:30 }}</h3>
+        <span class="price">₽ {{ good.price }}</span>
+        <a href="#" class="button">В корзину</a>
+      </div>
+    </div>
+</div>

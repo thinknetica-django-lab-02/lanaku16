@@ -1,5 +1,6 @@
 {% extends 'main/base.html' %}
 {% load static %}
+{% load market_extras %}
 
 {% block title %}
     Marketplace
@@ -10,7 +11,15 @@
 {% endblock %}
 
 {% block content %}
-  <img src="{% static 'images/big_megsezon_29_03.jpg' %}" class="img-fluid" alt="Просто картинка для главной страницы">
-  <h1>Bootstrap template</h1>
-  <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
-{% endblock %}
+<img src="{% static 'images/1556600664_br3mpwWFDoCdpiqUpzzmeuh5nZAEDidvG08wsahc.jfif' %}" class="card-img" alt="...">
+<div class="alert alert-light" role="alert">
+    <h2><p class="text-success">Популярные категории</p></h2>
+    {% show_all_categories %}
+</div>
+<div class="alert alert-light" role="alert">
+    <h2><p class="text-success">Новинки</p></h2>
+</div>
+<div class="alert alert-light" role="alert">
+    <h2><p class="text-success">Товары со скидкой</p></h2>
+</div>
+ {% endblock %}
