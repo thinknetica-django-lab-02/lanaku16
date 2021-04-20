@@ -42,6 +42,7 @@ class GoodViewsTestCase(TestCase):
 
     def test_view_url_accessible_by_name(self):
         good = Good.objects.get(id=self.obj_id)
+
         url = reverse('good-update', args=[good.id])
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 302)
