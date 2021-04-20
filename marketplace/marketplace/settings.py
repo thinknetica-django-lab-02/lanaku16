@@ -1,3 +1,5 @@
+from django.conf.global_settings import MEDIA_URL, MEDIA_ROOT
+
 """
 Django settings for marketplace project.
 
@@ -21,7 +23,7 @@ env = environ.Env(
 environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-from django.conf.global_settings import MEDIA_URL, MEDIA_ROOT
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -34,7 +36,7 @@ SECRET_KEY = env.str('SECRET_KEY', 'sample_unsafe_secret')
 
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = [ '127.0.0.1', 'localhost', 'testserver', ]
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'testserver',]
 
 
 # Application definition
