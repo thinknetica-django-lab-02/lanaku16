@@ -1,0 +1,189 @@
+
+<!DOCTYPE html>
+
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>main.tests &#8212; документация Marketplace 1.0.0</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="../../genindex.html" />
+    <link rel="search" title="Поиск" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Исходный код main.tests</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">django.test</span> <span class="kn">import</span> <span class="n">TestCase</span><span class="p">,</span> <span class="n">Client</span>
+<span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
+
+<span class="kn">from</span> <span class="nn">main.models</span> <span class="kn">import</span> <span class="n">Good</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="SimplePagesTestCase"><a class="viewcode-back" href="../../main.html#main.tests.SimplePagesTestCase">[документация]</a><span class="k">class</span> <span class="nc">SimplePagesTestCase</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Тестирование простых страниц&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="SimplePagesTestCase.test_view_url_accessible_by_name"><a class="viewcode-back" href="../../main.html#main.tests.SimplePagesTestCase.test_view_url_accessible_by_name">[документация]</a>    <span class="k">def</span> <span class="nf">test_view_url_accessible_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;home&#39;</span><span class="p">,</span> <span class="s1">&#39;about&#39;</span><span class="p">,</span> <span class="s1">&#39;contacts&#39;</span><span class="p">,</span> <span class="s1">&#39;delivery&#39;</span><span class="p">,</span> <span class="s1">&#39;pay&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="GoodViewsTestCase"><a class="viewcode-back" href="../../main.html#main.tests.GoodViewsTestCase">[документация]</a><span class="k">class</span> <span class="nc">GoodViewsTestCase</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Тестирование детального просмотра и добавления/редактирования товара&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="GoodViewsTestCase.setUpTestData"><a class="viewcode-back" href="../../main.html#main.tests.GoodViewsTestCase.setUpTestData">[документация]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">setUpTestData</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">obj_id</span> <span class="o">=</span> <span class="n">Good</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">good_name</span><span class="o">=</span><span class="s2">&quot;good test1&quot;</span><span class="p">,</span>
+                                         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;good test1&quot;</span><span class="p">,</span>
+                                         <span class="n">picture</span><span class="o">=</span><span class="s2">&quot;images/17679636.jpg&quot;</span><span class="p">,</span>
+                                         <span class="n">price</span><span class="o">=</span><span class="s2">&quot;9889&quot;</span><span class="p">,</span>
+                                         <span class="n">discount</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
+                                         <span class="n">brand</span><span class="o">=</span><span class="s2">&quot;BRAYER&quot;</span><span class="p">,</span>
+                                         <span class="n">color</span><span class="o">=</span><span class="s2">&quot;белый&quot;</span><span class="p">,</span>
+                                         <span class="n">good_shifr</span><span class="o">=</span><span class="s2">&quot;21660888&quot;</span><span class="p">,</span>
+                                         <span class="n">slug</span><span class="o">=</span><span class="s2">&quot;BRAYER21660888&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">pk</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">obj_id2</span> <span class="o">=</span> <span class="n">Good</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">good_name</span><span class="o">=</span><span class="s2">&quot;good test2&quot;</span><span class="p">,</span>
+                                          <span class="n">description</span><span class="o">=</span><span class="s2">&quot;good test2&quot;</span><span class="p">,</span>
+                                          <span class="n">picture</span><span class="o">=</span><span class="s2">&quot;images/17679636.jpg&quot;</span><span class="p">,</span>
+                                          <span class="n">price</span><span class="o">=</span><span class="s2">&quot;9889&quot;</span><span class="p">,</span>
+                                          <span class="n">discount</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
+                                          <span class="n">brand</span><span class="o">=</span><span class="s2">&quot;BRAYER&quot;</span><span class="p">,</span>
+                                          <span class="n">color</span><span class="o">=</span><span class="s2">&quot;белый&quot;</span><span class="p">,</span>
+                                          <span class="n">good_shifr</span><span class="o">=</span><span class="s2">&quot;21660888&quot;</span><span class="p">,</span>
+                                          <span class="n">slug</span><span class="o">=</span><span class="s2">&quot;BRAYER21660888&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">pk</span></div>
+
+<div class="viewcode-block" id="GoodViewsTestCase.test_view_url_accessible_by_name"><a class="viewcode-back" href="../../main.html#main.tests.GoodViewsTestCase.test_view_url_accessible_by_name">[документация]</a>    <span class="k">def</span> <span class="nf">test_view_url_accessible_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">good</span> <span class="o">=</span> <span class="n">Good</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">obj_id</span><span class="p">)</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;good-update&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">good</span><span class="o">.</span><span class="n">id</span><span class="p">])</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;good-add&#39;</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;good-detail&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">good</span><span class="o">.</span><span class="n">id</span><span class="p">])</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;goods&#39;</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="UserAccountTestCase"><a class="viewcode-back" href="../../main.html#main.tests.UserAccountTestCase">[документация]</a><span class="k">class</span> <span class="nc">UserAccountTestCase</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Тестирование аккаунта пользователя&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="UserAccountTestCase.setUpTestData"><a class="viewcode-back" href="../../main.html#main.tests.UserAccountTestCase.setUpTestData">[документация]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">setUpTestData</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">obj_id</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span> <span class="s1">&#39;testuser&#39;</span><span class="p">,</span>
+                                         <span class="n">email</span><span class="o">=</span> <span class="s1">&#39;foo@example.com&#39;</span><span class="p">,</span>
+                                         <span class="n">first_name</span><span class="o">=</span> <span class="s1">&#39;Test&#39;</span><span class="p">,</span>
+                                         <span class="n">last_name</span><span class="o">=</span> <span class="s1">&#39;User&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">pk</span></div>
+
+<div class="viewcode-block" id="UserAccountTestCase.test_login"><a class="viewcode-back" href="../../main.html#main.tests.UserAccountTestCase.test_login">[документация]</a>    <span class="k">def</span> <span class="nf">test_login</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;login&#39;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;register&#39;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="s1">&#39;foo&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="s1">&#39;bar&#39;</span><span class="p">}</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;logout&#39;</span><span class="p">),</span> <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">obj_id</span><span class="p">)</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;update-profile&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">])</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Marketplace</a></h1>
+
+
+
+
+
+
+
+
+<h3>Навигация</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Код модуля</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Быстрый поиск</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Искать" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Svetlana Kudinova.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
