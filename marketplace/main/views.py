@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from typing import Dict, Any, Union
 
 from django.contrib import auth
 from django.contrib.auth import logout, login
@@ -11,8 +12,10 @@ from django.contrib.auth.views import LoginView
 from django.core.cache import cache
 from django.core.mail import EmailMessage
 from django.db import transaction
+from django.db.models import QuerySet
 from django.forms import inlineformset_factory
-from django.http import request
+from django.http import request, HttpRequest, HttpResponse
+from django.http.response import HttpResponseRedirect, HttpResponsePermanentRedirect
 from django.shortcuts import render, redirect
 
 from django.shortcuts import render
@@ -33,7 +36,7 @@ from main.tasks import send_mail_about_new_good
 from marketplace.celery import debug_task
 
 
-def index(request):
+def index(request: HttpRequest) -> HttpResponse:
     if request.user.is_authenticated:
         username = auth.get_user(request).username
         user_id = User.objects.get(username=username)
@@ -59,13 +62,13 @@ class GoodListView(generic.ListView):
     paginate_by = 10
     context_object_name = "searchres"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> Dict[str, Any]:
         context = super(GoodListView, self).get_context_data(**kwargs)
         tag = self.request.GET.get('tag')
         context['tag'] = tag
         return context
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[Any]:
         queryset = super().get_queryset()
         tag = self.request.GET.get('tag')
         if tag:
@@ -76,7 +79,7 @@ class GoodListView(generic.ListView):
 class GoodDetailView(generic.DetailView):
     model = Good
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> Dict[str, Any]:
         context = super(GoodDetailView, self).get_context_data(**kwargs)
         view_counter = cache.get('view_counter')
         if not view_counter:
@@ -91,7 +94,7 @@ class GoodAddView(PermissionRequiredMixin, generic.CreateView):
     form_class = GoodAddForm
     success_url = reverse_lazy('goods')
 
-    def has_permission(self):
+    def has_permission(self) -> Union[Any, bool]:
         return self.request.user.groups.filter(name='sellers').exists()
 
     def form_valid(self, form):
@@ -106,23 +109,23 @@ class GoodUpdateView(PermissionRequiredMixin, generic.UpdateView):
     template_name_suffix = '_update_form'
     success_url = reverse_lazy('goods')
 
-    def has_permission(self):
+    def has_permission(self) -> Union[Any, bool]:
         return self.request.user.groups.filter(name='sellers').exists()
 
 
-def about(request):
+def about(request: HttpRequest) -> HttpResponse:
     return render(request, 'pages/about.html')
 
 
-def contacts(request):
+def contacts(request: HttpRequest) -> HttpResponse:
     return render(request, 'pages/contacts.html')
 
 
-def delivery(request):
+def delivery(request: HttpRequest) -> HttpResponse:
     return render(request, 'pages/delivery.html')
 
 
-def pay(request):
+def pay(request: HttpRequest) -> HttpResponse:
     return render(request, 'pages/pay.html')
 
 
@@ -130,7 +133,7 @@ class RegisterUser(generic.CreateView):
     form_class = UseRegistForm
     template_name = 'main/register.html'
 
-    def form_valid(self, form):
+    def form_valid(self, form) -> Union[HttpResponseRedirect, HttpResponsePermanentRedirect]:
         user = form.save()
         group = Group.objects.get(name='common users')
         user.groups.add(group)
@@ -148,14 +151,14 @@ class LoginUser(LoginView):
     template_name = 'main/login.html'
 
 
-def logout_user(request):
+def logout_user(request: HttpRequest) -> HttpResponse:
     logout(request)
     return redirect('login')
 
 
 @login_required
 @transaction.atomic
-def update_profile(request, pk):
+def update_profile(request: HttpRequest, pk: int) -> HttpResponse:
     user = User.objects.get(id=pk)
     #ProfileFormset = inlineformset_factory(User, Profile, fields=('birth_date',), can_delete=False)
     if request.method == 'POST':

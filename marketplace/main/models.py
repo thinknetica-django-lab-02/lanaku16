@@ -26,7 +26,7 @@ class Seller(models.Model):
     date_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     date_update = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.seller_name
 
 
@@ -36,7 +36,7 @@ class Tag(models.Model):
     date_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     date_update = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.tag_name
 
 
@@ -48,7 +48,7 @@ class Category(models.Model):
     date_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     date_update = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.category_name
 
 
@@ -77,10 +77,10 @@ class Good(models.Model):
         ordering = ["good_name"]
         verbose_name_plural = "Товары"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.good_name
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse('good-detail', args=[str(self.id)])
 
 
