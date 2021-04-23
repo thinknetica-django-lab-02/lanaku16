@@ -27,6 +27,7 @@ urlpatterns = [
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('', RedirectView.as_view(url='main/', permanent=True)),
     path('accounts/', include('allauth.urls')),
+    path('chat/', include('chat.urls')),
 ]
 
 if settings.DEBUG:

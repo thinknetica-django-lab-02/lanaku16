@@ -1,8 +1,13 @@
+from __future__ import division
 from django import template
 from django.template.defaultfilters import stringfilter
+
 import time
+from datetime import datetime, timedelta
+
 from django.conf import settings
 from django.template.loader import get_template
+from django.urls import reverse
 
 from main.models import Category
 
@@ -27,3 +32,17 @@ def reverse_string(string_value):
 def show_all_categories():
     cats = Category.objects.all()[:10]
     return {'cats': cats}
+
+
+@register.simple_tag
+def new_room():
+    now = datetime.utcnow()
+    args_or = str(totimestamp(now))
+    args = args_or.replace('.','')
+    return reverse('room', args=[args])
+
+
+def totimestamp(dt, epoch=datetime(1970, 1, 1)):
+    td = dt - epoch
+    # return td.total_seconds()
+    return (td.microseconds + (td.seconds + td.days * 86400) * 10 ** 6) / 10 ** 6

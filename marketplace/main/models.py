@@ -70,6 +70,7 @@ class Good(models.Model):
     category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True)
     tag = models.ManyToManyField(Tag, help_text="Добавьте теги для товара")
     seller = models.ForeignKey('Seller', on_delete=models.SET_NULL, null=True)  # должно привязываться автоматически
+    in_stock = models.PositiveIntegerField(verbose_name="Количество товара на складе")
     date_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     date_update = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
 
@@ -82,6 +83,9 @@ class Good(models.Model):
 
     def get_absolute_url(self):
         return reverse('good-detail', args=[str(self.id)])
+
+    def get_in_stock(self):
+        return self.in_stock
 
 
 class Profile(models.Model):
