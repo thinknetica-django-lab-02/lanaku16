@@ -59,7 +59,9 @@ INSTALLED_APPS = (
     'ckeditor_uploader',
     'django_apscheduler',
     'django_celery_results',
+    'channels',
     'main.apps.MainConfig',
+    'chat',
 )
 
 MIDDLEWARE = [
@@ -135,6 +137,17 @@ CACHES = {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }
     }
+}
+
+# Конфигурация Channels
+ASGI_APPLICATION = 'marketplace.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
 }
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
