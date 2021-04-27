@@ -28,6 +28,9 @@
         </div>
         <span class="navbar-text">
             {% if request.user.is_authenticated %}
+            {% if request.user.is_staff %}
+                <a href="{% url 'admin:index' %}">Вход в админ. панель | </a>
+            {% endif %}
             <a class="user" href="{% url 'update-profile' request.user.pk %}">{{ request.user.username }} | <a
                     href="{% url 'logout' %}">Выйти</a>
                 {% thumbnail  profile.picture  "40x40" crop="center" as im %}
