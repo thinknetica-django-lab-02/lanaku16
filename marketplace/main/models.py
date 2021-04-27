@@ -66,7 +66,6 @@ class Good(models.Model):
                              verbose_name="Цвет")  # в будущем отдельная таблица
     composition = models.CharField(max_length=50, help_text="Введите состав товара", verbose_name="Состав")
     good_shifr = models.CharField(max_length=12, help_text="Введите артикул товара", verbose_name="Артикул")
-    slug = models.SlugField(verbose_name="Слаг")
     category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True)
     tag = models.ManyToManyField(Tag, help_text="Добавьте теги для товара")
     seller = models.ForeignKey('Seller', on_delete=models.SET_NULL, null=True)  # должно привязываться автоматически

@@ -13,6 +13,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         tag = 'test tag'
         new_tag = Tag.objects.create(tag_name=tag).pk
+
         cat = 'test cat'
         new_cat = Category.objects.create(category_name=cat,
                                           slug=cat).pk
@@ -35,12 +36,18 @@ class Command(BaseCommand):
                                        color='test',
                                        composition='test',
                                        good_shifr=str(factory.Faker._get_faker().random_int()),
-                                       slug='test',
                                        category_id=new_cat,
                                        seller_id=new_seller,
                                        in_stock=0
                                        ).pk
 
+        through_objs = [
+            Good.tag.through(
+                good_id=new_good,
+                tag_id=new_tag,
+            ),]
+
+        Good.tag.through.objects.bulk_create(through_objs)
 
 
 
