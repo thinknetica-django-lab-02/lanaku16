@@ -24,7 +24,8 @@ class Command(BaseCommand):
                                            boss_name=factory.Faker('last_name'),
                                            okpo=str(factory.Faker._get_faker().random_int()),
                                            ogrnip=str(factory.Faker._get_faker().random_int()),
-                                           email='test@test,ru'
+                                           email='test@test.ru',
+                                           user_id=None
                                            ).pk
 
         new_good = Good.objects.create(good_name='test',
