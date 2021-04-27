@@ -25,6 +25,7 @@ class Seller(models.Model):
     email = models.EmailField(max_length=50, help_text="Введите e-mail организации", verbose_name="e-mail организации")
     date_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     date_update = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
+    user = models.ForeignKey(to='auth.user', blank=True, default=None, on_delete=models.PROTECT)
 
     def __str__(self) -> str:
         return self.seller_name
