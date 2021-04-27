@@ -16,7 +16,7 @@ class GoodAddForm(forms.ModelForm):
     class Meta:
         model = Good
         fields = ['good_name', 'description','picture', 'price', 'discount', 'brand', 'color', 'composition',
-                  'good_shifr', 'category', 'seller', 'tag', 'slug']
+                  'good_shifr', 'category', 'seller', 'tag']
         widgets = {
             'description': forms.Textarea(attrs={'cols':60, 'rows':10}),
         }
@@ -27,7 +27,7 @@ class GoodUpdateForm(forms.ModelForm):
     class Meta:
         model = Good
         fields = ['good_name', 'description','picture', 'price', 'discount', 'brand', 'color', 'composition',
-                  'good_shifr', 'category', 'seller', 'tag', 'slug']
+                  'good_shifr', 'category', 'seller', 'tag']
         widgets = {
             'description': forms.Textarea(attrs={'cols':60, 'rows':10}),
         }
