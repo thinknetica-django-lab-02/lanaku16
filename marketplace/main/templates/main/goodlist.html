@@ -9,21 +9,33 @@
     {% include 'main/header.html' %}
 {% endblock %}
 
+
 {% block content %}
 <h1>Каталог</h1>
-{% if searchres %}
-    <div class="container">
-       <div class="row row-cols-4">
-       {% for good in searchres %}
 
-            {% block good %}
-                {% include 'main/good_base.html' %}
-            {%endblock%}
-
-       {% endfor %}
+<div class="container">
+    <div class="row">
+        <div class="col-1">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item"><a href="">Cras justo odio</a></li>
+            </ul>
+        </div>
+       <div class="col-11">
+        {% if searchres %}
+            <div class="container">
+               <div class="row row-cols-4">
+               {% for good in searchres %}
+                    {% block good %}
+                        {% include 'main/good_base.html' %}
+                    {%endblock%}
+               {% endfor %}
+              </div>
+            </div>
+        {% else %}
+            <p>Пока не добавлен ни один товар</p>
+        {% endif %}
       </div>
     </div>
-{% else %}
-    <p>Пока не добавлен ни один товар</p>
-{% endif %}
+</div>
+
 {% endblock %}
