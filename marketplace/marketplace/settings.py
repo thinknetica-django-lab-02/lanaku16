@@ -14,17 +14,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
-import environ
-env = environ.Env(
-    # set casting, default value
-    DEBUG=(bool, False)
-)
-# reading .env file
-environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -32,11 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.str('SECRET_KEY', 'sample_unsafe_secret')
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
-DEBUG = env('DEBUG')
+DEBUG = int(os.environ.get("DEBUG", default=0))
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'testserver',]
+#ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'testserver', '0.0.0.0']
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
 
 # Application definition
@@ -99,13 +91,23 @@ WSGI_APPLICATION = 'marketplace.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'db',
+        'PORT': 5432
     }
 }
-
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
@@ -132,7 +134,7 @@ AUTH_PASSWORD_VALIDATORS = [
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379',
+        'LOCATION': 'redis://redis:6379',
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }
@@ -145,7 +147,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
+            "hosts": [('redis   ', 6379)],
         },
     },
 }
@@ -185,9 +187,9 @@ APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 
 # Celery Configuration Options
 CELERY_TASK_TRACK_STARTED = True
-CELERY_BROKER_URL = 'redis://' + 'localhost:6379' + '/0'
+CELERY_BROKER_URL = 'redis://' + 'redis:6379'
 CELERY_BROKER_TRNASPORT_OPTIONS = {'visibility_timeout': 3600}
-CELERY_RESULT_BACKEND = 'redis://' + 'localhost:6379' + '/0'
+CELERY_RESULT_BACKEND = 'redis://' + 'redis:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
@@ -197,5 +199,5 @@ CELERY_ACKS_LATE = True
 ADMIN_EMAIL = 'admin@marketplace.ru'
 DOMAIN_NAME = 'http://127.0.0.1:8000/'
 
-VONAGE_KEY = env.str('VONAGE_KEY', '')
-VONAGE_SECRET = env.str('VONAGE_SECRET', '')
+VONAGE_KEY = os.environ.get("VONAGE_KEY")
+VONAGE_SECRET = os.environ.get("VONAGE_SECRET")
