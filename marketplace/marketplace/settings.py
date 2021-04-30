@@ -134,14 +134,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-REDIS_HOST =
+REDIS_HOST = '127.0.0.1'
 if os.environ.get("HOME") == '/root':
-    REDIS_HOST='redis'
+    REDIS_HOST = 'redis'
 
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://redis:6379',
+        'LOCATION': 'redis://' + REDIS_HOST + ':6379',
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }
@@ -154,7 +154,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('redis', 6379)],
+            "hosts": [(REDIS_HOST, 6379)],
         },
     },
 }
@@ -193,10 +193,14 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 
 # Celery Configuration Options
+CELERY_REDIS_HOST = 'localhost'
+if os.environ.get("HOME") == '/root':
+    CELERY_REDIS_HOST = 'redis'
+
 CELERY_TASK_TRACK_STARTED = True
-CELERY_BROKER_URL = 'redis://' + 'redis:6379'
+CELERY_BROKER_URL = 'redis://' + CELERY_REDIS_HOST + ':6379'
 CELERY_BROKER_TRNASPORT_OPTIONS = {'visibility_timeout': 3600}
-CELERY_RESULT_BACKEND = 'redis://' + 'redis:6379'
+CELERY_RESULT_BACKEND = 'redis://' + CELERY_REDIS_HOST + ':6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
