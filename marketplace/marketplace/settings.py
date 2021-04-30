@@ -23,12 +23,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY", default='%3)o9+x$2g)-d6xh++0@u&yx%#qwx9st8&jgw(&hbddk8u2hb7')
 
-DEBUG = int(os.environ.get("DEBUG", default=0))
+DEBUG = int(os.environ.get("DEBUG", default=1))
 
-#ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'testserver', '0.0.0.0']
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'testserver']
+if os.environ.get("HOME") == '/root':
+    ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
 
 # Application definition
@@ -91,23 +92,26 @@ WSGI_APPLICATION = 'marketplace.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'db',
-        'PORT': 5432
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+if os.environ.get("HOME") == '/root':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'postgres',
+            'USER': 'postgres',
+            'PASSWORD': 'postgres',
+            'HOST': 'db',
+            'PORT': 5432
+        }
+    }
+
+
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
@@ -130,6 +134,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REDIS_HOST =
+if os.environ.get("HOME") == '/root':
+    REDIS_HOST='redis'
 
 CACHES = {
     'default': {
@@ -147,7 +154,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('redis   ', 6379)],
+            "hosts": [('redis', 6379)],
         },
     },
 }
