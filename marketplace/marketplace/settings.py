@@ -14,6 +14,15 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+import environ
+
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+# reading .env file
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,11 +32,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY", default='%3)o9+x$2g)-d6xh++0@u&yx%#qwx9st8&jgw(&hbddk8u2hb7')
+SECRET_KEY = os.environ.get("SECRET_KEY", default=env('SECRET_KEY'))
 
 DEBUG = int(os.environ.get("DEBUG", default=1))
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'testserver']
+ALLOWED_HOSTS=['127.0.0.1', 'localhost', 'testserver']
 if os.environ.get("HOME") == '/root':
     ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
@@ -210,5 +219,9 @@ CELERY_ACKS_LATE = True
 ADMIN_EMAIL = 'admin@marketplace.ru'
 DOMAIN_NAME = 'http://127.0.0.1:8000/'
 
-VONAGE_KEY = os.environ.get("VONAGE_KEY")
-VONAGE_SECRET = os.environ.get("VONAGE_SECRET")
+VONAGE_KEY = env('VONAGE_KEY')
+VONAGE_SECRET = env('VONAGE_SECRET')
+
+if os.environ.get("HOME") == '/root':
+    VONAGE_KEY = os.environ.get("VONAGE_KEY")
+    VONAGE_SECRET = os.environ.get("VONAGE_SECRET")
