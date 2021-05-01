@@ -13,19 +13,24 @@ logger = logging.getLogger(__name__)
 
 class Seller(models.Model):
     """ Продавец """
-    seller_name = models.CharField(max_length=50, help_text="Введите наименование организации",
+    seller_name = models.CharField(max_length=50, unique=True, help_text="Введите наименование организации",
                                    verbose_name="Наименование организации")
     mode = models.CharField(max_length=50, help_text="Введите форму организации",
                             verbose_name="Форма организации")  # ИП, Самозанятый и тд
-    inn = models.CharField(max_length=12, help_text="Введите ИНН организации",
+    inn = models.CharField(max_length=12, unique=True, help_text="Введите ИНН организации",
                            verbose_name="ИНН организации")  # функция проверки ИНН
     boss_name = models.CharField(max_length=50, help_text="Введите ФИО руководителя", verbose_name="ФИО руководителя")
-    okpo = models.CharField(max_length=8, help_text="Введите ОКПО организации", verbose_name="ОКПО организации")
-    ogrnip = models.CharField(max_length=13, help_text="Введите ОГРНИП организации", verbose_name="ОГРНИП организации")
-    email = models.EmailField(max_length=50, help_text="Введите e-mail организации", verbose_name="e-mail организации")
+    okpo = models.CharField(max_length=8, unique=True, help_text="Введите ОКПО организации", verbose_name="ОКПО организации")
+    ogrnip = models.CharField(max_length=13, unique=True, help_text="Введите ОГРНИП организации", verbose_name="ОГРНИП организации")
+    email = models.EmailField(max_length=50, unique=True, help_text="Введите e-mail организации", verbose_name="e-mail организации")
     date_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     date_update = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
     user = models.ForeignKey(to='auth.user', blank=True, default=None, null=True, on_delete=models.PROTECT)
+
+    class Meta:
+        ordering = ["id"]
+        verbose_name = "Продавец"
+        verbose_name_plural = "Продавцы"
 
     def __str__(self) -> str:
         return self.seller_name
@@ -33,32 +38,41 @@ class Seller(models.Model):
 
 class Tag(models.Model):
     """ Тэг """
-    tag_name = models.CharField(max_length=20, help_text="Введите наименование тега", verbose_name="Наименование тега")
+    tag_name = models.CharField(max_length=20, unique=True, help_text="Введите наименование тега", verbose_name="Наименование тега")
     date_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     date_update = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
 
     def __str__(self) -> str:
         return self.tag_name
 
+    class Meta:
+        ordering = ["id"]
+        verbose_name = "Тэг"
+        verbose_name_plural = "Тэги"
+
 
 class Category(models.Model):
     """ Категория """
-    category_name = models.CharField(max_length=50, help_text="Введите наименование категории",
+    category_name = models.CharField(max_length=50, unique=True, help_text="Введите наименование категории",
                                      verbose_name="Наименование категории")
-    slug = models.SlugField(verbose_name="Слаг")
+    slug = models.SlugField(unique=True, verbose_name="Слаг")
     date_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     date_update = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
 
     def __str__(self) -> str:
         return self.category_name
 
+    class Meta:
+        ordering = ["id"]
+        verbose_name = "Категория"
+        verbose_name_plural = "Категории"
+
 
 class Good(models.Model):
     """ Товар """
-    good_name = models.CharField(max_length=30, help_text="Введите наименование товара",
+    good_name = models.CharField(max_length=30, help_text="Введите наименование товара", unique=True,
                                  verbose_name="Наименование товара")
-    description = models.CharField(max_length=255, help_text="Введите описание товара", verbose_name="Описание")
-    picture = models.ImageField(upload_to="images/", verbose_name="Картинка")
+    description = models.TextField(max_length=255, help_text="Введите описание товара", verbose_name="Описание")
     price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name="Цена")  # 999 999.99
     discount = models.IntegerField(verbose_name="Скидка %")  # от 0 до 100
     brand = models.CharField(max_length=30, help_text="Введите бренд товара",
@@ -66,16 +80,20 @@ class Good(models.Model):
     color = models.CharField(max_length=15, help_text="Введите цвет товара",
                              verbose_name="Цвет")  # в будущем отдельная таблица
     composition = models.CharField(max_length=50, help_text="Введите состав товара", verbose_name="Состав")
-    good_shifr = models.CharField(max_length=12, help_text="Введите артикул товара", verbose_name="Артикул")
-    category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True)
-    tag = models.ManyToManyField(Tag, help_text="Добавьте теги для товара")
-    seller = models.ForeignKey('Seller', on_delete=models.SET_NULL, null=True)  # должно привязываться автоматически
+    good_shifr = models.CharField(max_length=12, unique=True, help_text="Введите артикул товара", verbose_name="Артикул")
+    category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True, verbose_name="Категория")
+    tag = models.ManyToManyField(Tag, help_text="Добавьте теги для товара", verbose_name='Тэги')
+    seller = models.ForeignKey('Seller', on_delete=models.SET_NULL, null=True, verbose_name="Продавец")  # должно привязываться автоматически
     in_stock = models.PositiveIntegerField(verbose_name="Количество товара на складе")
+    is_published = models.BooleanField(verbose_name="Опубликован", default=True)
+    archive = models.BooleanField(verbose_name="В архиве", default=False)
     date_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     date_update = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
+    picture = models.ImageField(upload_to="images/", verbose_name="Картинка")
 
     class Meta:
-        ordering = ["good_name"]
+        ordering = ["id"]
+        verbose_name = "Товар"
         verbose_name_plural = "Товары"
 
     def __str__(self) -> str:
