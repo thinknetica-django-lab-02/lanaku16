@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.contrib.postgres.fields import ArrayField
 from django.core.mail import EmailMessage
 from django.db import models
 from django.db.models import signals
@@ -82,7 +83,8 @@ class Good(models.Model):
     composition = models.CharField(max_length=50, help_text="Введите состав товара", verbose_name="Состав")
     good_shifr = models.CharField(max_length=12, unique=True, help_text="Введите артикул товара", verbose_name="Артикул")
     category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True, verbose_name="Категория")
-    tag = models.ManyToManyField(Tag, help_text="Добавьте теги для товара", verbose_name='Тэги')
+    #tag = models.ManyToManyField(Tag, help_text="Добавьте теги для товара", verbose_name='Тэги')
+    tag = ArrayField(models.CharField(max_length=40, blank=True, null=True), blank=True, null=True)
     seller = models.ForeignKey('Seller', on_delete=models.SET_NULL, null=True, verbose_name="Продавец")  # должно привязываться автоматически
     in_stock = models.PositiveIntegerField(verbose_name="Количество товара на складе")
     is_published = models.BooleanField(verbose_name="Опубликован", default=True)
