@@ -8,6 +8,7 @@ urlpatterns = [
     path('goods/<int:pk>', views.GoodDetailView.as_view(), name='good-detail'),
     path('goods/add', views.GoodAddView.as_view(), name='good-add'),
     path('goods/<int:pk>/edit', views.GoodUpdateView.as_view(), name='good-update'),
+    path('search', views.Search.as_view(), name='search'),
     path('about', views.about, name='about'),
     path('contacts', views.contacts, name='contacts'),
     path('delivery', views.delivery, name='delivery'),

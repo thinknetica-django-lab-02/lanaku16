@@ -57,6 +57,7 @@ INSTALLED_APPS = (
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'sorl.thumbnail',
+    'django.contrib.postgres',
     'ckeditor',
     'ckeditor_uploader',
     'django_apscheduler',

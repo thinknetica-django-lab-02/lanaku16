@@ -9,6 +9,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib import messages
 from django.contrib.auth.views import LoginView
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.core.cache import cache
 from django.core.mail import EmailMessage
 from django.db import transaction
@@ -73,6 +74,25 @@ class GoodListView(generic.ListView):
         tag = self.request.GET.get('tag')
         if tag:
             return queryset.filter(tag__tag_name=tag)
+        return queryset
+
+
+class Search(generic.ListView):
+    model = Good
+    template_name = 'main/goodlist.html'
+    paginate_by = 5
+    context_object_name = "searchres"
+
+    def get_context_data(self, *args, **kwargs) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['q'] = self.request.GET.get('q')
+        return context
+
+    def get_queryset(self) -> QuerySet[Any]:
+        q = self.request.GET.get('q')
+        query = SearchQuery(q)
+        vector = SearchVector('good_name', 'description', 'brand', 'composition', 'tag__tag_name', 'category__category_name')
+        queryset = Good.objects.annotate(search=vector).filter(search=query)
         return queryset
 
 

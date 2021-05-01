@@ -25,6 +25,10 @@
                 <a class="nav-link" href="{% url 'goods' %}">Обратная связь</a>
               </li>
           </ul>
+              <form class="d-flex" action="{% url 'search' %}" method="get">
+                <input class="form-control me-2" type="search" placeholder="Введите название..." aria-label="Search" name="q">
+                <button class="btn btn-outline-success" type="submit">Найти</button>
+              </form>
         </div>
 
         <span class="navbar-text">
