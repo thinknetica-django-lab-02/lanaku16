@@ -1,23 +1,57 @@
-version: '3.2'
-services:
- redis:
-    image: redis:latest
-    container_name: redis_test
-    ports:
-     - 6379:6379
-    volumes:
-     - ./redis-data:/var/lib/redis
-    environment:
-     - REDIS_REPLICATION_MODE=master
-    networks:
-      node_net:
-        ipv4_address: 172.28.1.4
-    restart: always
+version: '3.9'
 
-# networking for the Redis container
-networks:
-  node_net:
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.28.0.0/16
+services:
+  db:
+    image: postgres:12.0-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  web:
+    build: .
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py wait_for_db &&
+             python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_NAME=postgres
+      - DB_USER=postgres
+      - DB_PASS=postgres
+    env_file:
+      - ./.env.dev
+  redis:
+    image: redis:latest
+    expose:
+      - 6379
+    ports:
+       - 6379:6379
+  celery:
+      restart: always
+      build:
+        context: .
+      command: celery -A marketplace worker -l info --pool=solo
+      volumes:
+        - .:/usr/src/app
+      environment:
+        - DB_HOST=db
+        - DB_NAME=postgres
+        - DB_USER=postgres
+        - DB_PASS=postgres
+      depends_on:
+        - db
+        - redis
+        - web
+
+volumes:
+  postgres_data:
