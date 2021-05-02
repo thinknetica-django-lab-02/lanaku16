@@ -136,3 +136,27 @@ class SMSLog(models.Model):
     status_response = models.CharField(max_length=1)
     date_created = models.DateTimeField(auto_now_add=True)
     date_sent = models.DateTimeField(auto_now_add=True)
+
+
+class GoodView(models.Model):
+    """ Представление для отображения инфомарции по товару """
+    good_name = models.CharField(max_length=30, help_text="Введите наименование товара", unique=True,
+                                 verbose_name="Наименование товара")
+    description = models.TextField(max_length=255, help_text="Введите описание товара", verbose_name="Описание")
+    price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name="Цена")  # 999 999.99
+    discount = models.IntegerField(verbose_name="Скидка %")  # от 0 до 100
+    brand = models.CharField(max_length=30, help_text="Введите бренд товара",
+                             verbose_name="Бренд")  # в будущем отдельная таблица
+    color = models.CharField(max_length=15, help_text="Введите цвет товара",
+                             verbose_name="Цвет")  # в будущем отдельная таблица
+    composition = models.CharField(max_length=50, help_text="Введите состав товара", verbose_name="Состав")
+    good_shifr = models.CharField(max_length=12, unique=True, help_text="Введите артикул товара", verbose_name="Артикул")
+    picture = models.ImageField(upload_to="images/", verbose_name="Картинка")
+    category_name = models.CharField(max_length=50, unique=True, help_text="Введите наименование категории",
+                                     verbose_name="Наименование категории")
+    seller_name = models.CharField(max_length=50, unique=True, help_text="Введите наименование организации",
+                                   verbose_name="Наименование организации")
+
+    class Meta:
+        managed = False
+        db_table = 'good_view'
