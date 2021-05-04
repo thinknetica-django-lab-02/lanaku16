@@ -1,3 +1,45 @@
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  line-height: 60px; /* Vertically center the text there */
+  background-color: #f5f5f5;
+}
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+body > .container {
+  /* padding: 60px 15px 0; */
+}
+
+.footer > .container {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+code {
+  font-size: 80%;
+}
+
+
+
+
+
 * {
    box-sizing: border-box;
 }
@@ -8,6 +50,7 @@
    border-bottom: 2px solid #F5F5F5;
    background: white;
    transition: .3s ease-in;
+
 }
 .product-item:hover {
    border-bottom: 2px solid #fc5a5a;
@@ -52,55 +95,4 @@ width="300";
 height="400";
 }
 
-/*чат на главной странице*/
-.chatemplate {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  background-image: url(https://cdn4.iconfinder.com/data/icons/keynote-and-powerpoint-icons/256/Messages-512.png);
-  background-color: transparent;
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size:32px;/* размер изображения равен (или меньше) размеру кнопки вызова*/
-  width: 32px; /* ширина кнопки вызова */
-  height: 32px; /* высота кнопки вызова */
-}
-.parent_popup,
-.parent_popup_click {
-  display: none;
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 999;
-}
-.popup,
-.popup_click {
-  background: #fff;
-  max-width: 745px;
-  width:70%;
-  margin: 5% auto;
-  padding-bottom: 1px;
-  position: relative;
-}
-.popup_click::after {
- position:absolute;
- bottom:2px;
- right:5px;
- content:'ChaTemplate';
- color:#E1E1E1;
- font-size:8px;
-}
-.close {
-  position: absolute;
-  width: 30px;
-  height: 30px;
-  top: -20px;
-  left: -20px;
-  background-image: url(//st1.chatovod.ru/i/orangebox/close.png);
-  cursor: pointer;
-  position: absolute;
-  z-index: 1000;
-}
-/*чат на главной странице*/
+

@@ -8,11 +8,28 @@
     {% endfor %}
 {% endblock %}
 
+{% block meta %}
+    <meta name="description" content="Контакты – контакты интернет-магазина Marketplace" />
+{% endblock %}
+
 {% block header %}
     {% include 'main/header.html' %}
 {% endblock %}
 
 {% block content %}
+<h1>Контакты</h1>
+<div itemscope itemtype="http://schema.org/Organization" >
+  <span itemprop="name">Marketplace</span>
+  <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+    Адрес:
+    <span itemprop="streetAddress">Коллонтай, 251</span><br>
+    <span itemprop="postalCode"> 193318</span><br>
+    <span itemprop="addressLocality">Санкт-Петербург</span>,<br>
+  </div>
+  Телефон:<span itemprop="telephone">+7 495 739–70–00</span>,<br>
+  Факс:<span itemprop="faxNumber">+7 495 739–70–70</span>,<br>
+  Электронная почта: <span itemprop="email">marketplace-shop@marketplace.ru</span>
+</div>
 {% get_flatpages '/contacts/' as flatpages %}
     {% for page in flatpages %}
         {{ page.content|safe }}
