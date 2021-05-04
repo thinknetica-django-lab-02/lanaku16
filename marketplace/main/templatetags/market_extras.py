@@ -11,6 +11,8 @@ from django.urls import reverse
 
 from main.models import Category
 
+import random
+
 register = template.Library()
 
 @register.simple_tag
@@ -30,8 +32,15 @@ def reverse_string(string_value):
 
 @register.inclusion_tag('main/tags/cats.html')
 def show_all_categories():
-    cats = Category.objects.all()[:10]
-    return {'cats': cats}
+    """Вывод категорий в рандомном порядке"""
+    cats_list = []
+    cats = Category.objects.all()
+    for cat in cats:
+        cats_list.append((cat))
+
+    random_cats = random.sample(cats_list, len(cats_list))
+
+    return {'cats': random_cats}
 
 
 @register.simple_tag
