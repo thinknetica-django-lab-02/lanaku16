@@ -36,7 +36,7 @@ def send_mail_about_new_good(good_id):
         email = EmailMessage(subject, html_content, from_email, [to_email])
         email.content_subtype = "html"
         email.send()
-        logger.warning("Email отправлен")
+        logger.info("Email отправлен")
 
     logger.info("Отправка email:Окончание таски")
     return True
@@ -62,7 +62,7 @@ def monday_mail_about_new_goods():
         email = EmailMessage(subject, html_content, from_email, [to_email])
         email.content_subtype = "html"
         email.send()
-        logger.warning("Email отправлен")
+        logger.info("Email отправлен")
 
     logger.info("Отправка email в понедельник:Окончание таски")
     return True
