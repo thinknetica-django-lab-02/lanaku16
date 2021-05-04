@@ -200,6 +200,11 @@ LOGGING = {
         }
     },
     'loggers': {
+        'main': {
+            'handlers': ['file', 'mail_admins'],
+            'level': 'INFO',
+            'propagate': False,
+        },
         'django.server': {
             'handlers': ['django_all'],
             'level': 'WARNING',
@@ -216,13 +221,9 @@ LOGGING = {
             'handlers': ['django_all'],
             'level': 'WARNING',
         },
-        'main': {
-            'handlers': ['file', 'mail_admins'],
-            'level': 'INFO',
-            'propagate': False,
-        },
     },
 }
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
