@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /accounts/
+Allow: /goods/
+Host: http://localhost:8000
+Sitemap: http://127.0.0.1:8000/main/sitemap.xml

@@ -1,6 +1,12 @@
 from django.urls import path, re_path
+from main.sitemap import DynamicViewSitemap
+from django.contrib.sitemaps.views import sitemap
 
 from . import views
+
+sitemaps = {
+    'dynamic': DynamicViewSitemap
+}
 
 urlpatterns = [
     path('', views.index, name='home'),
@@ -17,5 +23,6 @@ urlpatterns = [
     path('accounts/register', views.RegisterUser.as_view(), name='register'),
     path('accounts/login', views.LoginUser.as_view(), name='login'),
     path('accounts/logout', views.logout_user, name='logout'),
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}),
 
 ]

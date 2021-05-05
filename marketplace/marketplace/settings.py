@@ -63,6 +63,7 @@ INSTALLED_APPS = (
     'django_apscheduler',
     'django_celery_results',
     'channels',
+    'django.contrib.sitemaps',
     'main.apps.MainConfig',
     'chat',
 )
