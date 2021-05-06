@@ -58,6 +58,7 @@ class ProfileForm(forms.ModelForm):
     def __init__(self, *args, user, **kwargs):
         self.fields['birth_date'] = forms.DateField(widget=forms.SelectDateWidget(), label='Дата рождения')
 
+
 class ProfileFormset (forms.inlineformset_factory(User, Profile, fields=('birth_date',), can_delete=False)):
     def __init__(self, *args, **kwargs):
         self.__initial = kwargs.pop('initial', [])

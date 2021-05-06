@@ -168,6 +168,63 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+EMAIL_FILE_PATH = '.'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+      'log_formatter': {
+          'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+          'style': '{',
+      }
+    },
+    'handlers': {
+        'django_all': {
+            'level': 'WARNING',
+            'class': 'logging.FileHandler',
+            'filename': 'django.log',
+        },
+        'file': {
+            'level': 'WARNING',
+            'class': 'logging.FileHandler',
+            'filename': 'log.log',
+            'formatter': 'log_formatter'
+        },
+        'mail_admins': {
+            'level': 'WARNING',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'email_backend': 'django.core.mail.backends.filebased.EmailBackend',
+            'include_html': True,
+        }
+    },
+    'loggers': {
+        'main': {
+            'handlers': ['file', 'mail_admins'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'django.server': {
+            'handlers': ['django_all'],
+            'level': 'WARNING',
+        },
+        'django': {
+            'handlers': ['django_all'],
+            'level': 'WARNING',
+        },
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'WARNING',
+        },
+        'django.db.backends': {
+            'handlers': ['django_all'],
+            'level': 'WARNING',
+        },
+    },
+}
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
