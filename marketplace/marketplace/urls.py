@@ -28,7 +28,8 @@ urlpatterns = [
     path('', RedirectView.as_view(url='main/', permanent=True)),
     path('accounts/', include('allauth.urls')),
     path('chat/', include('chat.urls')),
-]
+    path('api/v1/', include('rest_framework.urls', namespace='rest_framework')),
+    ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
