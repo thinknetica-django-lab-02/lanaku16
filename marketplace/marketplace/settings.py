@@ -64,6 +64,7 @@ INSTALLED_APPS = (
     'django_celery_results',
     'channels',
     'django.contrib.sitemaps',
+    'rest_framework',
     'main.apps.MainConfig',
     'chat',
 )

@@ -4,3 +4,11 @@ Not Found: /main/img/logo.png
 HTTP GET /main/img/logo.png 404 [0.11, 127.0.0.1:55332]
 Not Found: /about/img/logo.png
 HTTP GET /about/img/logo.png 404 [0.17, 127.0.0.1:55332]
+Not Found: /main/img/logo.png
+HTTP GET /main/img/logo.png 404 [3.13, 127.0.0.1:52113]
+Not Found: /main/api/v1
+HTTP GET /main/api/v1 404 [0.05, 127.0.0.1:52113]
+Not Found: /main/api/v1/login
+HTTP GET /main/api/v1/login 404 [0.05, 127.0.0.1:52113]
+Not Found: /main/img/logo.png
+HTTP GET /main/img/logo.png 404 [0.10, 127.0.0.1:52125]

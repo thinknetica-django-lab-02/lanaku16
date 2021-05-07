@@ -36,6 +36,7 @@ django-js-asset==1.2.2
 django-redis==4.12.1
 django-stubs==1.8.0
 django-stubs-ext==0.2.0
+djangorestframework==3.12.4
 docker==5.0.0
 docutils==0.16
 factory-boy==3.2.0
@@ -64,6 +65,7 @@ pip-tools==6.0.1
 pluggy==0.13.1
 prometheus-client==0.8.0
 prompt-toolkit==3.0.18
+psycopg2==2.8.6
 py==1.10.0
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
