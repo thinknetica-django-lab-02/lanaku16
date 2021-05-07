@@ -1,0 +1,240 @@
+openapi: 1.0.1
+
+info:
+  version: 1.0.0
+  title: "Marketplace API"
+
+paths:
+  api/v1/goods:
+    get:
+      summary: "Информация по товарам в каталоге"
+    responses:
+      '200':
+        content:
+          application/json:
+            schema:
+              example:
+                  {
+                    "status": "ok",
+                    "updated": "2020-06-05T11:33:21Z",
+                    "goods_count": 12,
+                  }
+      default:
+        description: unexpected error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Error'
+  api/v1/goods/{good_id}:
+    get:
+      summary: "Информация о товаре"
+      parameters:
+        - name: 12
+          in: query
+          description: ID товара
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                example:
+                  {
+                    "status": "ok",
+                    "updated": "2020-06-05T11:33:21Z",
+                    "goods_name": "Товар1",
+                    "price": 1000.00,
+                    "good_shifr": 12455656,
+                    "category": "Категория1",
+                    "seller": "Продавец1",
+                    "in_stock": 9,
+                    "date_create": "2020-06-05T11:33:21Z"
+                  }
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: "Добавление нового товара"
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                example:
+                  {
+                    "status": "ok",
+                    "updated": "2020-06-05T11:33:21Z",
+                  }
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  api/v1/category/{categoty_id}:
+    get:
+      summary: "Информация о категории"
+      parameters:
+        - name: 12
+          in: query
+          description: ID категории
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                example:
+                  {
+                    "status": "ok",
+                    "updated": "2020-06-05T11:33:21Z",
+                    "category_name": "Категория1",
+                    "goods_count": 12,
+                  }
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  api/v1/sellers:
+    get:
+      summary: "Информация о продавце"
+      parameters:
+        - name: 12
+          in: query
+          description: ID продавца
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                example:
+                  {
+                    "status": "ok",
+                    "updated": "2020-06-05T11:33:21Z",
+                    "seller_name": "Продавец1",
+                    "inn": 1234568,
+                    "okpo": 34354345,
+                    "ogrnip": 345345345,
+                    "user_id": 2
+                  }
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  api/v1/orders/{order_id}:
+    get:
+      summary: "Информация о заказах"
+      parameters:
+        - name: 12
+          in: query
+          description: ID заказа
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                example:
+                  {
+                    "status": "ok",
+                    "updated": "2020-06-05T11:33:21Z",
+                    "order_id": 123,
+                    "order_sum": 1000.00,
+                    "is_paid": true,
+                  }
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  api/v1/payments/{payments_id}:
+    get:
+      summary: "Информация об оплатах"
+      parameters:
+        - name: 12
+          in: query
+          description: ID оплаты
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                example:
+                  {
+                    "status": "ok",
+                    "updated": "2020-06-05T11:33:21Z",
+                    "order_id": 123,
+                    "order_sum": 9000.00,
+                  }
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  api/v1/users/{user_id}:
+    get:
+      summary: "Информация о пользователе"
+      parameters:
+        - name: 12
+          in: query
+          description: ID пользователя
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                example:
+                  {
+                    "status": "ok",
+                    "updated": "2020-06-05T11:33:21Z",
+                    "user_id": 1,
+                    "user_name": "Пользователь",
+                  }
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  Error:
+    type: object
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
