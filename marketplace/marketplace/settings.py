@@ -67,6 +67,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'main.apps.MainConfig',
     'chat',
+    'api',
 )
 
 MIDDLEWARE = [
@@ -297,3 +298,4 @@ VONAGE_SECRET = env('VONAGE_SECRET')
 if os.environ.get("HOME") == '/root':
     VONAGE_KEY = os.environ.get("VONAGE_KEY")
     VONAGE_SECRET = os.environ.get("VONAGE_SECRET")
+

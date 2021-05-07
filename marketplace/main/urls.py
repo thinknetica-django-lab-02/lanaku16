@@ -1,4 +1,4 @@
-from django.urls import path, re_path
+from django.urls import path
 from main.sitemap import DynamicViewSitemap
 from django.contrib.sitemaps.views import sitemap
 
