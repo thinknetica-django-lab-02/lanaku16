@@ -77,14 +77,26 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    'main.middleware.MobileMiddleware',
 ]
 
 ROOT_URLCONF = 'marketplace.urls'
 
+
+DESKTOP_TEMPLATE_DIRS = (
+    '/main/templates',
+)
+MOBILE_TEMPLATE_DIRS = (
+    '/main/mobile_templates',
+) + DESKTOP_TEMPLATE_DIRS
+
+TEMPLATE_DIRS = DESKTOP_TEMPLATE_DIRS
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': TEMPLATE_DIRS,
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
