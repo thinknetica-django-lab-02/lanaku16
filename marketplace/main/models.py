@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.db import models
@@ -45,6 +46,9 @@ class Tag(models.Model):
     def __str__(self) -> str:
         return self.tag_name
 
+    def get_all_tags(self):
+        return self.objects.all()
+
     class Meta:
         ordering = ["id"]
         verbose_name = "Тэг"
@@ -56,11 +60,21 @@ class Category(models.Model):
     category_name = models.CharField(max_length=50, unique=True, help_text="Введите наименование категории",
                                      verbose_name="Наименование категории")
     slug = models.SlugField(unique=True, verbose_name="Слаг")
+    favorite = models.BooleanField(verbose_name="Избранное", default=False)
     date_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     date_update = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
 
     def __str__(self) -> str:
         return self.category_name
+
+    def get_all_categories(self):
+        return self.objects.all()
+
+    def get_category_by_pk(self, pk):
+        try:
+            return self.objects.get(pk=pk)
+        except ObjectDoesNotExist:
+            return None
 
     class Meta:
         ordering = ["id"]
@@ -87,6 +101,7 @@ class Good(models.Model):
     in_stock = models.PositiveIntegerField(verbose_name="Количество товара на складе")
     is_published = models.BooleanField(verbose_name="Опубликован", default=True)
     archive = models.BooleanField(verbose_name="В архиве", default=False)
+    favorite = models.BooleanField(verbose_name="Избранное", default=False)
     date_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     date_update = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
     picture = models.ImageField(upload_to="images/", verbose_name="Картинка")
@@ -104,6 +119,15 @@ class Good(models.Model):
 
     def get_in_stock(self):
         return self.in_stock
+
+    def get_all_goods(self):
+        return self.objects.all()
+
+    def get_good_by_pk(self, pk):
+        try:
+            return self.objects.get(pk=pk)
+        except ObjectDoesNotExist:
+            return None
 
 
 class Profile(models.Model):

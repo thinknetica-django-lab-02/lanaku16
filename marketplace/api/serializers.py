@@ -1,6 +1,18 @@
 from rest_framework import serializers
 
-from main.models import Good
+from main.models import Good, Category, Tag
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        exclude = ('date_create', 'date_update')
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        exclude = ('date_create', 'date_update')
 
 
 class GoodListSerializer(serializers.ModelSerializer):
@@ -22,10 +34,6 @@ class GoodDetailSerializer(serializers.ModelSerializer):
 
 
 class GoodChangeSerializer(serializers.ModelSerializer):
-
-    # category = serializers.SlugRelatedField(slug_field='category_name', read_only=True)
-    # seller = serializers.SlugRelatedField(slug_field='seller_name', read_only=True)
-    # tag = serializers.SlugRelatedField(slug_field='tag_name', read_only=True, many=True)
 
     class Meta:
         model = Good

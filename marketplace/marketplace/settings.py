@@ -65,6 +65,7 @@ INSTALLED_APPS = (
     'channels',
     'django.contrib.sitemaps',
     'rest_framework',
+    'django_filters',
     'main.apps.MainConfig',
     'chat',
     'api',
@@ -299,3 +300,6 @@ if os.environ.get("HOME") == '/root':
     VONAGE_KEY = os.environ.get("VONAGE_KEY")
     VONAGE_SECRET = os.environ.get("VONAGE_SECRET")
 
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}

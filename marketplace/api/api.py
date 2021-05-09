@@ -2,33 +2,72 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
 
-from main.models import Good
+from main.models import Good, Category, Tag
 
-from .serializers import GoodListSerializer, GoodDetailSerializer, GoodChangeSerializer
+from .serializers import \
+    GoodListSerializer, \
+    GoodDetailSerializer, \
+    GoodChangeSerializer, \
+    CategorySerializer, \
+    TagSerializer
+
+
+class TagViewSet(viewsets.ModelViewSet):
+    queryset = Tag.get_all_tags(Tag)
+    serializer_class = TagSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['tag_name']
+
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.get_all_categories(Category)
+    serializer_class = CategorySerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['category_name']
 
 
 class GoodViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
+    filterset_fields = ('category',
+                        'in_stock',
+                        'is_published',
+                        'seller',
+                        'archive',
+                        'date_create')
+
+    def get_queryset(self):
+        return Good.get_all_goods(Good)
+
+    def filter_queryset(self, queryset):
+        filter_backends = (DjangoFilterBackend,)
+
+        for backend in list(filter_backends):
+            queryset = backend().filter_queryset(self.request, queryset, view=self)
+        return queryset
+
     def list(self, request):
-        query_set = Good.objects.all()
-        serializer = GoodListSerializer(query_set, many=True)
+        query_set = Good.get_all_goods(Good)
+        serializer = GoodListSerializer(self.filter_queryset(self.get_queryset()), many=True)
+
         return Response(serializer.data)
 
     def retrive(self, request, pk=None):
-        query_set = Good.objects.all()
+        #query_set = Good.objects.all()
+        query_set = Good.get_all_goods
         good = get_object_or_404(query_set, pk=pk)
         serializer = GoodDetailSerializer(good)
         return Response(serializer.data)
 
     def destroy(self, request, pk=None):
-        query_set = Good.objects.all()
+        query_set = Good.get_all_goods(Good)
         good = get_object_or_404(query_set, pk=pk)
         good.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def update(self, request, pk=None):
-        query_set = Good.objects.all()
+        query_set = Good.get_all_goods(Good)
         good = get_object_or_404(query_set, pk=pk)
         serializer = GoodChangeSerializer(data=request.data)
         if serializer.is_valid():

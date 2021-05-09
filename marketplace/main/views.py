@@ -60,7 +60,7 @@ def index(request: HttpRequest) -> HttpResponse:
 class GoodListView(generic.ListView):
     model = Good
     template_name = 'main/goodlist.html'
-    paginate_by = 10
+    paginate_by = 9
     context_object_name = "searchres"
 
     def get_context_data(self, **kwargs) -> Dict[str, Any]:
