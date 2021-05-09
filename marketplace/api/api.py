@@ -7,7 +7,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.status import HTTP_200_OK
 
 from main.models import Good, Category, Tag
-from .permissions import IsOwner
+from .permissions import IsGoodOwner
 
 from .serializers import \
     GoodListSerializer, \
@@ -83,7 +83,7 @@ class GoodViewSet(viewsets.ViewSet):
         elif action == 'destroy':
             permission_classes = [permissions.IsAdminUser]
         else:
-            permission_classes = [IsOwner]
+            permission_classes = [IsGoodOwner]
 
         return [permission() for permission in permission_classes]
 
