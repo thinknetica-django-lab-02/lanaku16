@@ -1,10 +1,13 @@
 from django.shortcuts import get_object_or_404
+from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework import viewsets, status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import viewsets, status, permissions
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.status import HTTP_200_OK
 
 from main.models import Good, Category, Tag
+from .permissions import IsOwner
 
 from .serializers import \
     GoodListSerializer, \
@@ -20,6 +23,16 @@ class TagViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['tag_name']
 
+    def get_permissions(self):
+        if self.action == 'list':
+            permission_classes = [permissions.IsAuthenticated]
+        elif action == 'retrive':
+            permission_classes = [permissions.IsAuthenticated]
+        else:
+            permission_classes = [permissions.IsAdminUser]
+
+        return [permission() for permission in permission_classes]
+
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.get_all_categories(Category)
@@ -27,9 +40,24 @@ class CategoryViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['category_name']
 
+    def getcounts(self, request, pk, *args, **kwargs):
+        return Response({
+            'category': pk,
+            'goodscount': Category.get_count_goods_in_category(Category,pk)
+        }, status=HTTP_200_OK)
+
+    def get_permissions(self):
+        if self.action == 'list':
+            permission_classes = [permissions.IsAuthenticated]
+        elif action == 'retrive':
+            permission_classes = [permissions.IsAuthenticated]
+        else:
+            permission_classes = [permissions.IsAdminUser]
+
+        return [permission() for permission in permission_classes]
+
 
 class GoodViewSet(viewsets.ViewSet):
-    permission_classes = [IsAuthenticated]
     filterset_fields = ('category',
                         'in_stock',
                         'is_published',
@@ -47,15 +75,25 @@ class GoodViewSet(viewsets.ViewSet):
             queryset = backend().filter_queryset(self.request, queryset, view=self)
         return queryset
 
+    def get_permissions(self):
+        if self.action == 'list':
+            permission_classes = [permissions.IsAuthenticated]
+        elif action == 'retrive':
+            permission_classes = [permissions.IsAuthenticated]
+        elif action == 'destroy':
+            permission_classes = [permissions.IsAdminUser]
+        else:
+            permission_classes = [IsOwner]
+
+        return [permission() for permission in permission_classes]
+
     def list(self, request):
         query_set = Good.get_all_goods(Good)
         serializer = GoodListSerializer(self.filter_queryset(self.get_queryset()), many=True)
-
         return Response(serializer.data)
 
     def retrive(self, request, pk=None):
-        #query_set = Good.objects.all()
-        query_set = Good.get_all_goods
+        query_set = Good.get_all_goods(Good)
         good = get_object_or_404(query_set, pk=pk)
         serializer = GoodDetailSerializer(good)
         return Response(serializer.data)

@@ -1,5 +1,6 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
+from rest_framework.urlpatterns import format_suffix_patterns
 
 from . import api
 
@@ -21,3 +22,9 @@ urlpatterns = [
     ]
 
 urlpatterns += router.urls
+urlpatterns += format_suffix_patterns([
+    path('category-modelset/<int:pk>/goodscount/',
+         api.CategoryViewSet.as_view({'get': 'getcounts'}),
+         name='goodscount')
+])
+
