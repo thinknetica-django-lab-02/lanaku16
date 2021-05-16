@@ -36,6 +36,9 @@ class Seller(models.Model):
     def __str__(self) -> str:
         return self.seller_name
 
+    def get_user_id(self):
+        return self.user
+
 
 class Tag(models.Model):
     """ Тэг """
@@ -75,6 +78,13 @@ class Category(models.Model):
             return self.objects.get(pk=pk)
         except ObjectDoesNotExist:
             return None
+
+    def get_count_goods_in_category(self, pk):
+        goods_set = Good.objects.filter(category=pk)
+        i = 0
+        for good in goods_set:
+            i += 1
+        return i
 
     class Meta:
         ordering = ["id"]
