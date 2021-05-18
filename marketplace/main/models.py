@@ -1,4 +1,4 @@
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.db import models
@@ -14,9 +14,17 @@ logger = logging.getLogger(__name__)
 
 class Seller(models.Model):
     """ Продавец """
+    seller_mode = (
+        ('ИПсНДС', 'ИП с НДС'),
+        ('ИПбНДС', 'ИП без НДС'),
+        ('ИПНПД', 'ИП на НПД'),
+        ('ОргНДС', 'Организация с НДС'),
+        ('ОргбНДС', 'Организация без НДС'),
+        ('Самоз', 'Самозанаятый')
+    )
     seller_name = models.CharField(max_length=50, unique=True, help_text="Введите наименование организации",
-                                   verbose_name="Наименование организации")
-    mode = models.CharField(max_length=50, help_text="Введите форму организации",
+                                   verbose_name="Наименование организации", db_index=True)
+    mode = models.CharField(max_length=15 ,choices=seller_mode, help_text="Введите форму организации",
                             verbose_name="Форма организации")  # ИП, Самозанятый и тд
     inn = models.CharField(max_length=12, unique=True, help_text="Введите ИНН организации",
                            verbose_name="ИНН организации")  # функция проверки ИНН
@@ -26,7 +34,7 @@ class Seller(models.Model):
     email = models.EmailField(max_length=50, unique=True, help_text="Введите e-mail организации", verbose_name="e-mail организации")
     date_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     date_update = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
-    user = models.ForeignKey(to='auth.user', blank=True, default=None, null=True, on_delete=models.PROTECT)
+    user = models.ForeignKey(to='auth.user', blank=True, default=None, null=True, on_delete=models.PROTECT, editable=False)
 
     class Meta:
         ordering = ["id"]
@@ -61,9 +69,9 @@ class Tag(models.Model):
 class Category(models.Model):
     """ Категория """
     category_name = models.CharField(max_length=50, unique=True, help_text="Введите наименование категории",
-                                     verbose_name="Наименование категории")
+                                     verbose_name="Наименование категории", db_index=True)
     slug = models.SlugField(unique=True, verbose_name="Слаг")
-    favorite = models.BooleanField(verbose_name="Избранное", default=False)
+    favorite = models.BooleanField(verbose_name="Избранное", default=False, db_index=True)
     date_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     date_update = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
 
@@ -95,7 +103,7 @@ class Category(models.Model):
 class Good(models.Model):
     """ Товар """
     good_name = models.CharField(max_length=30, help_text="Введите наименование товара", unique=True,
-                                 verbose_name="Наименование товара")
+                                 verbose_name="Наименование товара", db_index=True)
     description = models.TextField(max_length=255, help_text="Введите описание товара", verbose_name="Описание")
     price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name="Цена")  # 999 999.99
     discount = models.IntegerField(verbose_name="Скидка %")  # от 0 до 100
@@ -105,21 +113,36 @@ class Good(models.Model):
                              verbose_name="Цвет")  # в будущем отдельная таблица
     composition = models.CharField(max_length=50, help_text="Введите состав товара", verbose_name="Состав")
     good_shifr = models.CharField(max_length=12, unique=True, help_text="Введите артикул товара", verbose_name="Артикул")
-    category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True, verbose_name="Категория")
+    category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True, verbose_name="Категория", db_index=True)
     tag = models.ManyToManyField(Tag, help_text="Добавьте теги для товара", verbose_name='Тэги')
-    seller = models.ForeignKey('Seller', on_delete=models.SET_NULL, null=True, verbose_name="Продавец")  # должно привязываться автоматически
+    seller = models.ForeignKey('Seller', on_delete=models.SET_NULL, null=True, verbose_name="Продавец", db_index=True)  # должно привязываться автоматически
     in_stock = models.PositiveIntegerField(verbose_name="Количество товара на складе")
-    is_published = models.BooleanField(verbose_name="Опубликован", default=True)
-    archive = models.BooleanField(verbose_name="В архиве", default=False)
-    favorite = models.BooleanField(verbose_name="Избранное", default=False)
+    is_published = models.BooleanField(verbose_name="Опубликован", default=True, db_index=True)
+    archive = models.BooleanField(verbose_name="В архиве", default=False, db_index=True)
+    favorite = models.BooleanField(verbose_name="Избранное", default=False, db_index=True)
     date_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     date_update = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
     picture = models.ImageField(upload_to="images/", verbose_name="Картинка")
 
     class Meta:
+        unique_together = (
+            ('good_name', 'date_create'),
+            ('good_name', 'price', 'category')
+        )
         ordering = ["id"]
         verbose_name = "Товар"
         verbose_name_plural = "Товары"
+
+    def clean(self) -> None:
+        errors = {}
+        if self.price and self.price < 0:
+            errors['price'] = ValidationError('Укажите неотрицательное значение цены')
+
+        if self.discount and self.discount < 0:
+            errors['discount'] = ValidationError('Укажите неотрицательное значение скидки')
+
+        if errors:
+            raise ValidationError(errors)
 
     def __str__(self) -> str:
         return self.good_name
@@ -127,13 +150,13 @@ class Good(models.Model):
     def get_absolute_url(self) -> str:
         return reverse('good-detail', args=[str(self.id)])
 
-    def get_in_stock(self):
+    def get_in_stock(self) -> int:
         return self.in_stock
 
-    def get_all_goods(self):
+    def get_all_goods(self) -> str:
         return self.objects.all()
 
-    def get_good_by_pk(self, pk):
+    def get_good_by_pk(self, pk) -> str:
         try:
             return self.objects.get(pk=pk)
         except ObjectDoesNotExist:
@@ -173,7 +196,7 @@ class SMSLog(models.Model):
 
 
 class GoodView(models.Model):
-    """ Представление для отображения инфомарции по товару """
+    """ Представление для отображения инфомарции по товару (PosregreSQL)"""
     good_name = models.CharField(max_length=30, help_text="Введите наименование товара", unique=True,
                                  verbose_name="Наименование товара")
     description = models.TextField(max_length=255, help_text="Введите описание товара", verbose_name="Описание")

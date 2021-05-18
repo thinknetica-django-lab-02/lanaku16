@@ -67,8 +67,8 @@ INSTALLED_APPS = (
     'rest_framework',
     'django_filters',
     'main.apps.MainConfig',
-    'chat',
-    'api',
+    'chat.apps.ChatConfig',
+    'api.apps.ApiConfig',
 )
 
 MIDDLEWARE = [
